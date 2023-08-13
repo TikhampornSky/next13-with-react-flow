@@ -10,10 +10,12 @@ import ReactFlow, {
     useNodesState,
     useEdgesState,
     Controls,
-    MiniMap
+    MiniMap,
+    Panel
 } from "reactflow";
 import 'reactflow/dist/style.css';
 import CustomNode from "./CustomNode";
+import NavBar from "../Nav/Navbar";
 
 const initialNodes: Node[] = [
     {
@@ -60,9 +62,12 @@ const initialNodes: Node[] = [
                 nodeTypes={nodeTypes}
                 fitView
             >
-                <Controls />
-                <MiniMap />
-                <Background gap={20} size={1} />
+              <Panel position="top-left">
+                <NavBar />
+              </Panel>
+              <Controls />
+              <MiniMap />
+              <Background gap={20} size={1} />
             </ReactFlow>
         </div>
     );
