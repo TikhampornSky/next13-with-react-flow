@@ -18,6 +18,11 @@ const Nodes:Node[] = [
       position: { x: 10, y: 10 },
       parentNode: 'A',
       extent: 'parent',
+      style: {
+        backgroundColor: 'rgba(53, 188, 237, 0.34)',
+        borderColor: 'rgba(53, 188, 237, 1)',
+        borderWidth: 2,
+      }
     },
     {
       id: 'A-2',
@@ -34,7 +39,7 @@ const Nodes:Node[] = [
       style: {
         width: 170,
         height: 160,
-        backgroundColor: 'rgba(240,240,240,0.25)',
+        backgroundColor: 'rgba(53, 188, 237, 0.34)',
       },
     },
     {
