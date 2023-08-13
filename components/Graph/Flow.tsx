@@ -15,16 +15,15 @@ import ReactFlow, {
 import 'reactflow/dist/style.css';
 import CustomNode from "./CustomNode";
 import NavBar from "../Nav/Navbar";
-import Nodes from "./Node";
 import Edges from "./Edge";
-
+import { FlowProps } from "@/types";
   
 const nodeTypes = {
   custom: CustomNode
 };
 
-const BasicFlow = () => {
-  const [nodes, , onNodesChange] = useNodesState(Nodes);
+const BasicFlow = ({data}: FlowProps) => {
+  const [nodes, , onNodesChange] = useNodesState(data);
   const [edges, setEdges, onEdgesChange] = useEdgesState(Edges);
   const onConnect = useCallback(
     (params: Edge | Connection) => setEdges((els) => addEdge(params, els)),

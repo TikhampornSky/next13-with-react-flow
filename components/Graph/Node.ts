@@ -1,3 +1,4 @@
+import { MockDataInterface } from "@/types";
 import { Node } from "reactflow";
 
 const Nodes:Node[] = [
@@ -98,6 +99,15 @@ const Nodes:Node[] = [
         data: { label: "Custom Node" },
         position: { x: 400, y: 200 }
     }
-  ];
+];
   
-  export default Nodes;
+export default Nodes;
+
+export function SetMockNodes(data: MockDataInterface[]) {
+    for (let i = 0; i < Nodes.length; i++) {
+        if (Nodes[i].data?.label !== null && Nodes[i].data?.label !== undefined) {
+            Nodes[i].data.label = data[i].title.substring(0, 7);
+        }
+    }
+    return Nodes;
+}
