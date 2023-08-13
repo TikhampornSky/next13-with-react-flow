@@ -1,14 +1,26 @@
-import { Flow } from '@/components'
+import { BasicFlow, Item } from '@/components'
 import NavBar from '@/components/Navbar'
-import Image from 'next/image'
+import { Grid } from '@mui/material'
+
 
 export default function Home() {
   return (
-    <div>
-      <NavBar />
-      <div>
-        <Flow />
-      </div>
-    </div>
+    <Grid
+      container
+      direction="column"
+      justifyContent="center"
+      alignItems="center"
+    >
+      <Grid item>
+        <Item>
+          <NavBar /> 
+        </Item>
+      </Grid>
+      <Grid item>
+        <Item>
+          <BasicFlow />
+        </Item>
+      </Grid>
+    </Grid>
   )
 }

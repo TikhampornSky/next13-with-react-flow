@@ -1,7 +1,9 @@
 import Navbar from './Navbar';
-import Flow from './Flow';
+import BasicFlow from './Flow';
+import Item from './Item';
 
 export { 
     Navbar,
-    Flow
+    BasicFlow,
+    Item
 };

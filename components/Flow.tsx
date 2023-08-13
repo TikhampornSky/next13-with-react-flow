@@ -1,19 +1,71 @@
 "use client"
 
-import ReactFlow from 'reactflow';
+import { useCallback } from "react";
+import ReactFlow, {
+    Node,
+    addEdge,
+    Background,
+    Edge,
+    Connection,
+    useNodesState,
+    useEdgesState,
+    Controls,
+    MiniMap
+} from "reactflow";
 import 'reactflow/dist/style.css';
+import CustomNode from "./CustomNode";
 
-const initialNodes = [
-    { id: '1', position: { x: 0, y: 0 }, data: { label: '1' } },
-    { id: '2', position: { x: 0, y: 100 }, data: { label: '2' } },
-];
-
-const initialEdges = [{ id: 'e1-2', source: '1', target: '2' }];
+const initialNodes: Node[] = [
+    {
+      id: "1",
+      type: "input",
+      data: { label: "Node 1" },
+      position: { x: 250, y: 5 }
+    },
+    { id: "2", data: { label: "Node 2" }, position: { x: 100, y: 100 } },
+    { id: "3", data: { label: "Node 3" }, position: { x: 400, y: 100 } },
+    {
+      id: "4",
+      type: "custom",
+      data: { label: "Custom Node" },
+      position: { x: 400, y: 200 }
+    }
+  ];
   
-export default function Flow() {
+  const initialEdges: Edge[] = [
+    { id: "e1-2", source: "1", target: "2", animated: true },
+    { id: "e1-3", source: "1", target: "3" }
+  ];
+  
+  const nodeTypes = {
+    custom: CustomNode
+  };
+  
+  const BasicFlow = () => {
+    const [nodes, , onNodesChange] = useNodesState(initialNodes);
+    const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+    const onConnect = useCallback(
+      (params: Edge | Connection) => setEdges((els) => addEdge(params, els)),
+      [setEdges]
+    );
+  
     return (
         <div style={{ width: '100vw', height: '100vh' }}>
-            <ReactFlow nodes={initialNodes} edges={initialEdges} />
+             <ReactFlow
+                nodes={nodes}
+                edges={edges}
+                onNodesChange={onNodesChange}
+                onEdgesChange={onEdgesChange}
+                onConnect={onConnect}
+                nodeTypes={nodeTypes}
+                fitView
+            >
+                <Controls />
+                <MiniMap />
+                <Background gap={20} size={1} />
+            </ReactFlow>
         </div>
     );
-}
+  };
+  
+  export default BasicFlow;
