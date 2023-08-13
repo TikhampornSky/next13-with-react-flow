@@ -1,5 +1,5 @@
 import { BasicFlow, Item } from '@/components'
-import NavBar from '@/components/Navbar'
+import NavBar from '@/components/Nav/Navbar'
 import { Grid } from '@mui/material'
 
 
