@@ -1,5 +1,5 @@
-import Navbar from './Nav/Navbar';
-import BasicFlow from './Graph/Flow';
+import Navbar from './Nav';
+import BasicFlow from './Graph';
 import Item from './Item';
 
 export { 

@@ -17,7 +17,7 @@ import ReactFlow, {
 } from "reactflow";
 import 'reactflow/dist/style.css';
 import CustomNode from "./CustomNode";
-import NavBar from "../Nav/Navbar";
+import NavBar from "../Nav";
 import Edges from "./Edge";
 import { FlowProps } from "@/types";
 import CustomizedDialogs from "./NodeDialog";
