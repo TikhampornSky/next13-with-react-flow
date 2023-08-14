@@ -10,7 +10,10 @@ import ReactFlow, {
     useEdgesState,
     Controls,
     MiniMap,
-    Panel
+    Panel,
+    Node,
+    NodeSelectionChange,
+    EdgeSelectionChange
 } from "reactflow";
 import 'reactflow/dist/style.css';
 import CustomNode from "./CustomNode";
@@ -30,6 +33,57 @@ const BasicFlow = ({data}: FlowProps) => {
     [setEdges]
   );
 
+  const onNodeMouseEnterAndLeave = (event: React.MouseEvent, node: Node) => {
+    let ns:NodeSelectionChange[] = []
+    let es:EdgeSelectionChange[] = []
+    
+    nodes.map((nodee) => {
+      if (nodee.id === node.id) {
+        if (event.type === 'mouseenter') {
+          nodee.style = {
+            ...nodee.style,
+            backgroundColor: 'rgba(237, 29, 27, 0.28)',
+            borderColor: 'rgba(255, 4, 11, 0.57)',
+            borderWidth: 2,
+          };
+        } else {
+          nodee.style = {
+            ...nodee.style,
+            backgroundColor: 'rgba(53, 188, 237, 0.34)',
+            borderColor: 'rgba(53, 188, 237, 1)',
+            borderWidth: 2,
+          }
+        }
+        ns.push({
+          id: nodee.id,
+          type: 'select',
+          selected: true,
+        })
+      }
+      return nodee;
+    });
+    edges.map((edge) => {
+      if (edge.source === node.id) {
+        if (event.type === 'mouseenter') {
+          edge.animated = true;
+          edge.style = { stroke: 'red' };
+        } else {
+          edge.animated = false;
+          edge.style = { stroke: 'black' };
+        }
+        es.push({
+          id: edge.id,
+          type: 'select',
+          selected: true,
+        })
+      }
+      return edge;
+    });
+
+    onNodesChange(ns);
+    onEdgesChange(es);
+  }
+
   return (
       <div style={{ width: '100vw', height: '100vh' }}>
             <ReactFlow
@@ -38,6 +92,8 @@ const BasicFlow = ({data}: FlowProps) => {
               onNodesChange={onNodesChange}
               onEdgesChange={onEdgesChange}
               onConnect={onConnect}
+              onNodeMouseEnter={onNodeMouseEnterAndLeave}
+              onNodeMouseLeave={onNodeMouseEnterAndLeave}
               nodeTypes={nodeTypes}
               fitView
               attributionPosition="top-right"
