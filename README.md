@@ -6,4 +6,10 @@ Tools:
 - Tailwindcss
 - Mui
 - React Flow
-<br>
+
+Features:
+- Display graph
+- SubFlows
+- Panel, Control and Mindmap
+- Get mock data from free API
+- Mouse events (Enter and Leave)
