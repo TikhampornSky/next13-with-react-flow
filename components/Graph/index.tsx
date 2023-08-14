@@ -19,8 +19,9 @@ import 'reactflow/dist/style.css';
 import CustomNode from "./CustomNode";
 import NavBar from "../Nav";
 import Edges from "./Edge";
-import { FlowProps } from "@/types";
+import { DialogProps, FlowProps, MockDetailInterface } from "@/types";
 import CustomizedDialogs from "./NodeDialog";
+import { fetchMockDataDetailsById } from "@/backend";
   
 const nodeTypes = {
   custom: CustomNode
@@ -87,9 +88,14 @@ const BasicFlow = ({data}: FlowProps) => {
 
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState('');
-  const onNodeClick = (event: React.MouseEvent, node: Node) => {
+  const [detail, setDetail] = useState<MockDetailInterface>({} as MockDetailInterface);
+  const onNodeClick = async (event: React.MouseEvent, node: Node) => {
+    if (node.type === 'group' || node.type === 'output') return;
     setOpen(true);
     setTitle(node.data.label);
+    const randomNumber = Math.floor(Math.random() * 500) + 1;  // mock id for fake api
+    const mockDetails = await fetchMockDataDetailsById(randomNumber.toString())
+    setDetail(mockDetails);
   }
 
   return (
@@ -114,7 +120,7 @@ const BasicFlow = ({data}: FlowProps) => {
             <MiniMap />
             <Background gap={20} size={1} />
           </ReactFlow>
-          <CustomizedDialogs open={open} setOpen={setOpen} title={title} />
+          <CustomizedDialogs open={open} setOpen={setOpen} title={title} detail={detail} setTitle={setTitle} setDetail={setDetail}/>
       </div>
   );
 };

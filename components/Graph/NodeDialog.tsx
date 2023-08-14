@@ -8,7 +8,7 @@ import DialogActions from '@mui/material/DialogActions';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import Typography from '@mui/material/Typography';
-import { DialogProps } from '@/types';
+import { DialogProps, MockDetailInterface } from '@/types';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialogContent-root': {
@@ -49,10 +49,27 @@ function BootstrapDialogTitle(props: DialogTitleProps) {
   );
 }
 
-export default function CustomizedDialogs({open, setOpen, title}: DialogProps) {
+export default function CustomizedDialogs({open, setOpen, title, setTitle, detail, setDetail}: DialogProps) {
   const handleClose = () => {
     setOpen(false);
+    setTitle('');
+    setDetail({} as MockDetailInterface);
   };
+  if (detail.id === undefined) {
+    return (
+      <div>
+        <BootstrapDialog
+          onClose={handleClose}
+          aria-labelledby="customized-dialog-title"
+          open={open}
+        >
+          <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
+            Loading...
+          </BootstrapDialogTitle>
+        </BootstrapDialog>
+      </div>
+    )
+  }
 
   return (
     <div>
@@ -62,22 +79,17 @@ export default function CustomizedDialogs({open, setOpen, title}: DialogProps) {
         open={open}
       >
         <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
-          {title}
+          {title + "-" + detail.id}
         </BootstrapDialogTitle>
         <DialogContent dividers>
           <Typography gutterBottom>
-            Cras mattis consectetur purus sit amet fermentum. Cras justo odio,
-            dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac
-            consectetur ac, vestibulum at eros.
+            {detail.name}
           </Typography>
           <Typography gutterBottom>
-            Praesent commodo cursus magna, vel scelerisque nisl consectetur et.
-            Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.
+            {detail.email}
           </Typography>
           <Typography gutterBottom>
-            Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus
-            magna, vel scelerisque nisl consectetur et. Donec sed odio dui. Donec
-            ullamcorper nulla non metus auctor fringilla.
+            {detail.body}
           </Typography>
         </DialogContent>
         <DialogActions>

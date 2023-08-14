@@ -18,6 +18,14 @@ export interface MockDataInterface {
   completed: boolean;
 }
 
+export interface MockDetailInterface {
+  postId: number;
+  id: number;
+  name: string;
+  email: string;
+  body: string;
+}
+
 export interface FlowProps {
   data: Node[];
 }
@@ -26,4 +34,7 @@ export interface DialogProps {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>
   title: string;
+  setTitle: Dispatch<SetStateAction<string>>
+  detail: MockDetailInterface
+  setDetail: Dispatch<SetStateAction<MockDetailInterface>>
 }
