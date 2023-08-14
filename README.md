@@ -13,3 +13,4 @@ Features:
 - Panel, Control and Mindmap
 - Get mock data from free API
 - Mouse events (Enter and Leave)
+- Show dialog when click on node

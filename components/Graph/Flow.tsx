@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import ReactFlow, {
     addEdge,
     Background,
@@ -20,6 +20,7 @@ import CustomNode from "./CustomNode";
 import NavBar from "../Nav/Navbar";
 import Edges from "./Edge";
 import { FlowProps } from "@/types";
+import CustomizedDialogs from "./NodeDialog";
   
 const nodeTypes = {
   custom: CustomNode
@@ -84,6 +85,13 @@ const BasicFlow = ({data}: FlowProps) => {
     onEdgesChange(es);
   }
 
+  const [open, setOpen] = useState(false);
+  const [title, setTitle] = useState('');
+  const onNodeClick = (event: React.MouseEvent, node: Node) => {
+    setOpen(true);
+    setTitle(node.data.label);
+  }
+
   return (
       <div style={{ width: '100vw', height: '100vh' }}>
             <ReactFlow
@@ -94,6 +102,7 @@ const BasicFlow = ({data}: FlowProps) => {
               onConnect={onConnect}
               onNodeMouseEnter={onNodeMouseEnterAndLeave}
               onNodeMouseLeave={onNodeMouseEnterAndLeave}
+              onNodeClick={onNodeClick}
               nodeTypes={nodeTypes}
               fitView
               attributionPosition="top-right"
@@ -105,6 +114,7 @@ const BasicFlow = ({data}: FlowProps) => {
             <MiniMap />
             <Background gap={20} size={1} />
           </ReactFlow>
+          <CustomizedDialogs open={open} setOpen={setOpen} title={title} />
       </div>
   );
 };

@@ -1,4 +1,4 @@
-import { MouseEventHandler } from "react";
+import { Dispatch, MouseEventHandler, SetStateAction } from "react";
 import { Node } from "reactflow";
 
 export interface CustomButtonProps {
@@ -20,4 +20,10 @@ export interface MockDataInterface {
 
 export interface FlowProps {
   data: Node[];
+}
+
+export interface DialogProps {
+  open: boolean;
+  setOpen: Dispatch<SetStateAction<boolean>>
+  title: string;
 }
