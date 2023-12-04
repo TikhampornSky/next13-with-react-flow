@@ -1,7 +1,7 @@
 import { MockDataInterface } from "@/types";
 import { Node } from "reactflow";
 
-const Nodes:Node[] = [
+const Nodes: Node[] = [
     {
         id: 'A',
         type: 'group',
@@ -33,9 +33,9 @@ const Nodes:Node[] = [
         position: { x: -100, y: 200 },
         data: null,
         style: {
-        width: 170,
-        height: 160,
-        backgroundColor: 'rgba(53, 188, 237, 0.34)',
+            width: 170,
+            height: 160,
+            backgroundColor: 'rgba(53, 188, 237, 0.34)',
         },
     },
     {
@@ -47,29 +47,32 @@ const Nodes:Node[] = [
         extent: 'parent',
         draggable: false,
         style: {
-        width: 60,
+            width: 60,
+            borderRadius: 5,
         },
     },
     {
         id: 'B-2',
         data: { label: 'Node B-2' },
-        position: { x: 10, y: 90 },
+        position: { x: 10, y: 100 },
         parentNode: 'B',
         extent: 'parent',
         draggable: false,
         style: {
-        width: 60,
+            width: 60,
+            borderRadius: 5,
         },
     },
     {
         id: 'B-3',
         data: { label: 'Node B-3' },
-        position: { x: 100, y: 90 },
+        position: { x: 100, y: 100 },
         parentNode: 'B',
         extent: 'parent',
         draggable: false,
         style: {
-        width: 60,
+            width: 60,
+            borderRadius: 5,
         },
     },
     {
@@ -77,15 +80,15 @@ const Nodes:Node[] = [
         position: { x: 100, y: 200 },
         data: { label: 'Node C' },
     },
-    { 
-        id: "C-1", 
+    {
+        id: "C-1",
         position: { x: 0, y: 100 },  // relative to parent (because of 'parentNode')
         parentNode: 'C',
-        data: { label: "Node C-1" }, 
+        data: { label: "Node C-1" },
     },
-    {   
-        id: "C-2", 
-        position: { x: 200, y: 100 } ,
+    {
+        id: "C-2",
+        position: { x: 200, y: 100 },
         parentNode: 'C',
         data: { label: "Node C-2" },
     },
@@ -98,7 +101,7 @@ const Nodes:Node[] = [
     //     connectable: true
     // }
 ];
-  
+
 export default Nodes;
 
 export function SetMockNodes(data: MockDataInterface[]) {
