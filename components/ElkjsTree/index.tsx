@@ -71,7 +71,9 @@ const getLayoutedElements = (nodes: customNodeType, edges: customEdgeType, optio
             width: 150,
             height: 50,
         })),
-        edges: edges,
+        edges: edges.map((edge) => ({
+            ...edge,
+        })),
     };
 
     return elk

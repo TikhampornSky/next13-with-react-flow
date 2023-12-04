@@ -58,7 +58,7 @@ export const initialNodes = [
   { id: '7', type: 'output', data: { label: 'output' }, position },
 ];
 
-export const initialEdges: ElkExtendedEdge[] = [
+export const initialEdges = [
   { id: 'e12', source: '1', target: '2', type: 'smoothstep' },
   { id: 'e13', source: '1', target: '3', type: 'smoothstep' },
   { id: 'e22a', source: '2', target: '2a', type: 'smoothstep' },
