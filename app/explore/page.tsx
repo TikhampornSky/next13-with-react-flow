@@ -12,7 +12,7 @@ export default function Explore() {
         >
             <Grid item>
                 <Item>
-                    <LayoutFlow />
+                    {/* <LayoutFlow /> Doesn't work */}
                 </Item>
             </Grid>
         </Grid>
