@@ -1,4 +1,5 @@
 import { Item } from "@/components";
+import D3FlexTree from "@/components/D3Flextree";
 import LayoutFlow from "@/components/DagreTree";
 import { Grid } from "@mui/material";
 
@@ -12,7 +13,8 @@ export default function Explore() {
         >
             <Grid item>
                 <Item>
-                    <LayoutFlow /> 
+                    {/* <LayoutFlow />  */}
+                    <D3FlexTree />
                 </Item>
             </Grid>
         </Grid>
