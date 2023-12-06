@@ -54,10 +54,11 @@ const getLayoutedElements = (nodes: Node<any, string | undefined>[], edges: Edge
         ancestorNodes.map((nextNode) => {
             if (nextNode.id === node.id) {
                 node.position.x += (nodeWidth + (2*groupPadding)) / 2 ;
-                node.position.y += ( ( nextNode.groupAncestorMemberCount ) * nodeHeight ) + (nextNode.groupAncestorMemberCount * groupMargin);
+                node.position.y += ( ( nextNode.groupAncestorMemberCount ) * nodeHeight ) + (nextNode.groupAncestorMemberCount * groupMargin)
             }
         })
-
+        // node.data.label = node.position.x + ", " + node.position.y;
+        dagreGraph.setNode(node.id, { x: node.position.x, y: node.position.y });
         return node;
     });
 

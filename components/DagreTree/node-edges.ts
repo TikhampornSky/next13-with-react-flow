@@ -72,7 +72,20 @@ export const initialNodes: Node<any, string | undefined>[] = [
         position,
         draggable: false,
         type: 'groupNode'
-    }
+    },
+    {
+        id: '2e',
+        data: { label: 'node 2e' },
+        position,
+        // draggable: false,
+        type: 'groupNode'
+    },
+    {
+        id: '2f',
+        data: { label: 'node 2f' },
+        position,
+        // draggable: false,
+    },
 ];
 
 export const initialEdges = [
@@ -87,6 +100,8 @@ export const initialEdges = [
     { id: 'e45', source: '4', target: '5', type: edgeType, markerEnd: { type: MarkerType.ArrowClosed, color: 'black' } },
     { id: 'e2a12a-1', source: '2a', target: '2a-1', type: edgeType, markerEnd: { type: MarkerType.ArrowClosed, color: 'black' } },
     { id: 'e2a12a-2', source: '2a', target: '2a-2', type: edgeType, markerEnd: { type: MarkerType.ArrowClosed, color: 'black' } },
+    { id: 'e2d2e', source: '2d', target: '2e', type: edgeType, markerEnd: { type: MarkerType.ArrowClosed, color: 'black' } },
+    { id: 'e2d2f', source: '2d', target: '2f', type: edgeType, markerEnd: { type: MarkerType.ArrowClosed, color: 'black' } },
 ];
 
 interface IAncestorNode {
@@ -107,3 +122,4 @@ export const ancestorNodes: IAncestorNode[] = [
 export let groupMember = new Map<string, string[]>() // key: group node id, value: member node id (May be node interface)
 groupMember.set('2c', ['2c-1', '2c-2', '2c-3', '2c-4', '2c-5', '2c-6'])
 groupMember.set('5', ['5-1', '5-2', '5-3'])
+groupMember.set('2e', ['2e-1'])

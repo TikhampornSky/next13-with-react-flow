@@ -2,7 +2,6 @@ import { Handle, Position } from 'reactflow';
 import { groupMember } from './node-edges';
 
 function GroupNode({ id, data, isConnectable }: { id: string, data: string, isConnectable: boolean }) {
-    console.log("Group data: ", id);
     let member: string[] = groupMember.get(id) || [];
     return (
         <div style={{ backgroundColor: 'red', padding: '10px' }}>
