@@ -13,6 +13,15 @@ function GroupNode({ data, isConnectable }: {data: string, isConnectable: boolea
       <div style={{backgroundColor: 'blue', padding: '5px', margin: '5px'}}>
         <p> Member 3 </p>
       </div>
+      <div style={{backgroundColor: 'blue', padding: '5px', margin: '5px'}}>
+        <p> Member 1 </p>
+      </div>
+      <div style={{backgroundColor: 'blue', padding: '5px', margin: '5px'}}>
+        <p> Member 2 </p>
+      </div>
+      <div style={{backgroundColor: 'blue', padding: '5px', margin: '5px'}}>
+        <p> Member 3 </p>
+      </div>
       <Handle type="source" position={Position.Bottom} id="b" isConnectable={isConnectable} />
     </div>
   );
