@@ -15,58 +15,78 @@ export const initialNodes: Node<any, string | undefined>[] = [
         id: '2',
         data: { label: 'node 2' },
         position,
-        draggable : false,
+        draggable: false,
     },
     {
         id: '2a',
         data: { label: 'node 2a' },
         position,
-        draggable : false,
+        draggable: false,
     },
     {
         id: '2b',
         data: { label: 'node 2b' },
         position,
-        draggable : false,
+        draggable: false,
     },
     {
         id: '2c',
         data: { label: 'node 2c' },
         position,
-        draggable : false,
+        draggable: false,
     },
     {
         id: '2d',
         data: { label: 'node 2d' },
         position,
-        draggable : false,
+        draggable: false,
     },
     {
         id: '3',
         data: { label: 'node 3' },
         position,
-        draggable : false,
+        draggable: false,
+    },
+    {
+        id: 'group-1',
+        // type: 'group',
+        data: { label: 'Group 1' },
+        position,
+        draggable: false,
+        style: {
+            border: '1px solid #222138',
+            padding: 10,
+            borderRadius: 10,
+            background: '#b6f0c6',
+            color: '#000000',
+            // width: 200,
+            // height: 200,
+        }
     },
     {
         id: '4',
         data: { label: 'node 4' },
         position,
-        draggable : false,
+        draggable: false,
+        parentNode: 'group-1',
+        extent: 'parent'
     },
     {
         id: '5',
         data: { label: 'node 5' },
         position,
-        draggable : false,
+        draggable: false,
+        parentNode: 'group-1',
+        extent: 'parent'
     },
     {
         id: '6',
         type: 'output',
         data: { label: 'output' },
         position,
-        draggable : false,
+        draggable: false,
     },
-    { id: '7', type: 'output', data: { label: 'output' }, position, draggable : false, },
+    { id: '7', type: 'output', data: { label: 'output' }, position, draggable: false, },
 ];
 
 export const initialEdges = [
