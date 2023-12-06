@@ -1,7 +1,7 @@
 import { MarkerType, Node } from "reactflow";
 
 const position = { x: 0, y: 0 };
-const edgeType = 'smoothstep';
+const edgeType = 'default';
 
 export const initialNodes: Node<any, string | undefined>[] = [
     {
@@ -34,12 +34,13 @@ export const initialNodes: Node<any, string | undefined>[] = [
         data: { label: 'node 2c' },
         position,
         draggable: false,
+        type: 'groupNode'
     },
     {
         id: '2d',
         data: { label: 'node 2d' },
         position,
-        draggable: false,
+        // draggable: false,
     },
     {
         id: '3',
@@ -47,46 +48,6 @@ export const initialNodes: Node<any, string | undefined>[] = [
         position,
         draggable: false,
     },
-    {
-        id: 'group-1',
-        // type: 'group',
-        data: { label: 'Group 1' },
-        position,
-        draggable: false,
-        style: {
-            border: '1px solid #222138',
-            padding: 10,
-            borderRadius: 10,
-            background: '#b6f0c6',
-            color: '#000000',
-            // width: 200,
-            // height: 200,
-        }
-    },
-    {
-        id: '4',
-        data: { label: 'node 4' },
-        position,
-        draggable: false,
-        parentNode: 'group-1',
-        extent: 'parent'
-    },
-    {
-        id: '5',
-        data: { label: 'node 5' },
-        position,
-        draggable: false,
-        parentNode: 'group-1',
-        extent: 'parent'
-    },
-    {
-        id: '6',
-        type: 'output',
-        data: { label: 'output' },
-        position,
-        draggable: false,
-    },
-    { id: '7', type: 'output', data: { label: 'output' }, position, draggable: false, },
 ];
 
 export const initialEdges = [
@@ -97,7 +58,4 @@ export const initialEdges = [
     { id: 'e22c', source: '2', target: '2c', type: edgeType, markerEnd: { type: MarkerType.ArrowClosed, color: 'black' } },
     { id: 'e2c2d', source: '2c', target: '2d', type: edgeType, markerEnd: { type: MarkerType.ArrowClosed, color: 'black' } },
     { id: 'e2b2d', source: '2b', target: '2d', type: edgeType, markerEnd: { type: MarkerType.ArrowClosed, color: 'black' } },
-    { id: 'e45', source: '4', target: '5', type: edgeType, markerEnd: { type: MarkerType.ArrowClosed, color: 'black' } },
-    { id: 'e56', source: '5', target: '6', type: edgeType, markerEnd: { type: MarkerType.ArrowClosed, color: 'black' } },
-    { id: 'e57', source: '5', target: '7', type: edgeType, markerEnd: { type: MarkerType.ArrowClosed, color: 'black' } },
 ];

@@ -1,5 +1,5 @@
 "use client"
-import React from 'react';
+import React, { useMemo } from 'react';
 import ReactFlow, {
     ConnectionLineType,
     useNodesState,
@@ -13,6 +13,7 @@ import dagre from 'dagre';
 import { initialNodes, initialEdges } from './node-edges';
 
 import 'reactflow/dist/style.css';
+import GroupNode from "./CustomNode";
 
 const dagreGraph = new dagre.graphlib.Graph({ compound: true });
 dagreGraph.setDefaultEdgeLabel(() => ({}));
@@ -24,7 +25,12 @@ const getLayoutedElements = (nodes: Node<any, string | undefined>[], edges: Edge
     dagreGraph.setGraph({ rankdir: direction });
 
     nodes.forEach((node) => {
-        dagreGraph.setNode(node.id, { width: nodeWidth, height: nodeHeight });
+        if (node.type === 'groupNode') {
+            dagreGraph.setNode(node.id, { width: nodeWidth, height: 200 });
+        } else {
+            dagreGraph.setNode(node.id, { width: nodeWidth, height: nodeHeight });    
+        }
+        
         if (node.parentNode) {
             dagreGraph.setParent(node.id, node.parentNode);
         }
@@ -43,27 +49,19 @@ const getLayoutedElements = (nodes: Node<any, string | undefined>[], edges: Edge
 
         // We are shifting the dagre node position (anchor=center center) to the top left
         // so it matches the React Flow node anchor point (top left).
-        if (node.parentNode) {
-            const parentNodeWithPosition = dagreGraph.node(node.parentNode)
-            node.position = {
-                x: nodeWithPosition.x - parentNodeWithPosition.x,
-                y: nodeWithPosition.y - parentNodeWithPosition.y,
-            }
-        } else {
-            node.position = {
-                x: nodeWithPosition.x - nodeWidth / 2,
-                y: nodeWithPosition.y - nodeHeight / 2,
-            };
-        }
+        node.position = {
+            x: nodeWithPosition.x - nodeWidth / 2,
+            y: nodeWithPosition.y - nodeHeight / 2,
+        };
 
         return node;
     });
 
-    // Check position
-    nodes.forEach((node) => {
-        const nodeWithPosition = dagreGraph.node(node.id);
-        console.log(node.id, " --> React-Flow Position: ", node.position, " Dagre Position: ", nodeWithPosition);
-    })
+    // // Check position
+    // nodes.forEach((node) => {
+    //     const nodeWithPosition = dagreGraph.node(node.id);
+    //     console.log(node.id, " --> React-Flow Position: ", node.position, " Dagre Position: ", nodeWithPosition);
+    // })
 
     return { nodes, edges };
 };
@@ -76,6 +74,7 @@ const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(
 const LayoutFlow = () => {
     const [nodes, setNodes, onNodesChange] = useNodesState(layoutedNodes);
     const [edges, setEdges, onEdgesChange] = useEdgesState(layoutedEdges);
+    const nodeTypes = useMemo(() => ({ groupNode: GroupNode }), []);
 
     return (
         <div style={{ width: '100vw', height: '100vh' }}>
@@ -86,6 +85,7 @@ const LayoutFlow = () => {
                 onEdgesChange={onEdgesChange}
                 connectionLineType={ConnectionLineType.SmoothStep}
                 fitView
+                nodeTypes={nodeTypes}
             >
             </ReactFlow>
         </div>
