@@ -1,7 +1,7 @@
 import { MarkerType, Node } from "reactflow";
 
 const position = { x: 0, y: 0 };
-const edgeType = 'smoothstep';
+const edgeType = 'default';
 
 export const initialNodes: Node<any, string | undefined>[] = [
     {
@@ -24,6 +24,18 @@ export const initialNodes: Node<any, string | undefined>[] = [
         draggable: false,
     },
     {
+        id: '2a-1',
+        data: { label: 'node 2a-1' },
+        position,
+        draggable: false,
+    },
+    {
+        id: '2a-2',
+        data: { label: 'node 2a-2' },
+        position,
+        draggable: false,
+    },
+    {
         id: '2b',
         data: { label: 'node 2b' },
         position,
@@ -40,7 +52,7 @@ export const initialNodes: Node<any, string | undefined>[] = [
         id: '2d',
         data: { label: 'node 2d' },
         position,
-        // draggable: false,
+        draggable: false,
     },
     {
         id: '3',
@@ -48,6 +60,19 @@ export const initialNodes: Node<any, string | undefined>[] = [
         position,
         draggable: false,
     },
+    {
+        id: '4',
+        data: { label: 'node 4' },
+        position,
+        draggable: false,
+    },
+    {
+        id: '5',
+        data: { label: 'node 5' },
+        position,
+        draggable: false,
+        type: 'groupNode'
+    }
 ];
 
 export const initialEdges = [
@@ -58,4 +83,27 @@ export const initialEdges = [
     { id: 'e22c', source: '2', target: '2c', type: edgeType, markerEnd: { type: MarkerType.ArrowClosed, color: 'black' } },
     { id: 'e2c2d', source: '2c', target: '2d', type: edgeType, markerEnd: { type: MarkerType.ArrowClosed, color: 'black' } },
     { id: 'e2b2d', source: '2b', target: '2d', type: edgeType, markerEnd: { type: MarkerType.ArrowClosed, color: 'black' } },
+    { id: 'e34', source: '3', target: '4', type: edgeType, markerEnd: { type: MarkerType.ArrowClosed, color: 'black' } },
+    { id: 'e45', source: '4', target: '5', type: edgeType, markerEnd: { type: MarkerType.ArrowClosed, color: 'black' } },
+    { id: 'e2a12a-1', source: '2a', target: '2a-1', type: edgeType, markerEnd: { type: MarkerType.ArrowClosed, color: 'black' } },
+    { id: 'e2a12a-2', source: '2a', target: '2a-2', type: edgeType, markerEnd: { type: MarkerType.ArrowClosed, color: 'black' } },
 ];
+
+interface IAncestorNode {
+    id: string;
+    groupAncestorId: string;
+    groupAncestorMemberCount: number;
+
+}
+
+export const ancestorNodes: IAncestorNode[] = [
+    {
+        id: '2d',  // It means that node 2d has an ancestor node as group node (2c)
+        groupAncestorId: '2c',
+        groupAncestorMemberCount: 6  // Number of member in group node
+    }
+]
+
+export let groupMember = new Map<string, string[]>() // key: group node id, value: member node id (May be node interface)
+groupMember.set('2c', ['2c-1', '2c-2', '2c-3', '2c-4', '2c-5', '2c-6'])
+groupMember.set('5', ['5-1', '5-2', '5-3'])

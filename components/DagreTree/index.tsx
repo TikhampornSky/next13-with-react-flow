@@ -10,7 +10,7 @@ import ReactFlow, {
 } from 'reactflow';
 import dagre from 'dagre';
 
-import { initialNodes, initialEdges } from './node-edges';
+import { initialNodes, initialEdges, ancestorNodes } from './node-edges';
 
 import 'reactflow/dist/style.css';
 import GroupNode from "./CustomNode";
@@ -20,20 +20,14 @@ dagreGraph.setDefaultEdgeLabel(() => ({}));
 
 const nodeWidth = 172;
 const nodeHeight = 36;
+const groupPadding = 10; // padding for the contents inside the group node
+const groupMargin = 10; // margin for the contents inside the group node
 
 const getLayoutedElements = (nodes: Node<any, string | undefined>[], edges: Edge<any>[], direction = 'TB') => {
     dagreGraph.setGraph({ rankdir: direction });
 
     nodes.forEach((node) => {
-        if (node.type === 'groupNode') {
-            dagreGraph.setNode(node.id, { width: nodeWidth, height: 200 });
-        } else {
-            dagreGraph.setNode(node.id, { width: nodeWidth, height: nodeHeight });    
-        }
-        
-        if (node.parentNode) {
-            dagreGraph.setParent(node.id, node.parentNode);
-        }
+        dagreGraph.setNode(node.id, { width: nodeWidth, height: nodeHeight });
     });
 
     edges.forEach((edge) => {
@@ -47,23 +41,25 @@ const getLayoutedElements = (nodes: Node<any, string | undefined>[], edges: Edge
         node.targetPosition = Position.Top;
         node.sourcePosition = Position.Bottom;
 
-        // We are shifting the dagre node position (anchor=center center) to the top left
-        // so it matches the React Flow node anchor point (top left).
         node.position = {
             x: nodeWithPosition.x - nodeWidth / 2,
             y: nodeWithPosition.y - nodeHeight / 2,
         };
 
-        
+        if (node.type === 'groupNode') {
+            node.position.x -= groupPadding * 2
+        }
+
+        // Check if the parent node is a group node
+        ancestorNodes.map((nextNode) => {
+            if (nextNode.id === node.id) {
+                node.position.x += (nodeWidth + (2*groupPadding)) / 2 ;
+                node.position.y += ( ( nextNode.groupAncestorMemberCount ) * nodeHeight ) + (nextNode.groupAncestorMemberCount * groupMargin);
+            }
+        })
 
         return node;
     });
-
-    // // Check position
-    // nodes.forEach((node) => {
-    //     const nodeWithPosition = dagreGraph.node(node.id);
-    //     console.log(node.id, " --> React-Flow Position: ", node.position, " Dagre Position: ", nodeWithPosition);
-    // })
 
     return { nodes, edges };
 };
