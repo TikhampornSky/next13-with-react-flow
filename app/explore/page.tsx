@@ -1,6 +1,7 @@
 import { Item } from "@/components";
 import D3FlexTree from "@/components/D3Flextree";
 import LayoutFlow from "@/components/DagreTree";
+import EntitreeTree from "@/components/EntitreeFlex";
 import { Grid } from "@mui/material";
 
 export default function Explore() {
@@ -14,7 +15,8 @@ export default function Explore() {
             <Grid item>
                 <Item>
                     {/* <LayoutFlow />  */}
-                    <D3FlexTree />
+                    {/* <D3FlexTree /> */}
+                    <EntitreeTree />
                 </Item>
             </Grid>
         </Grid>
