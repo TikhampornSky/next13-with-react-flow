@@ -6,9 +6,7 @@ import { getInitialNodesAndEdges, groupMember } from './node-edges';
 import { findTopologicalSortDFS } from "./algorithm";
 import SingleNode from "./CustomNode/SingleNode";
 import OrderedGroupNode from "./CustomNode/OrderedGroupNode";
-
-const nodeWidth = 172;
-const nodeHeight = 36;
+import { gapBetweenNodeInVertical, nodeHeight, nodeWidth } from "./constant";
 
 interface NodeData {
     id: string;
@@ -29,7 +27,7 @@ const options: FlextreeOptions<NodeData> = {
 
 function calculateNodeSize(nodeId: string): [number, number] {
     let h = groupMember.get(nodeId)?.members.length || 1;  // TODO: Handle in the case group of unordered
-    return [nodeWidth, (nodeHeight * h)];
+    return [nodeWidth, (nodeHeight * h) + gapBetweenNodeInVertical];
 }
 
 function recur(id: string, hierarchyChildren: NodeData[]) {
@@ -37,7 +35,7 @@ function recur(id: string, hierarchyChildren: NodeData[]) {
     s.id = id
     s.children = [];
     hierarchyChildren.push(s);
-    
+
     const neighborIds = groupMember.get(id)?.next || [];
     for (let i = 0; i < neighborIds.length; i++) {
         const neighborId = neighborIds[i];
@@ -45,12 +43,8 @@ function recur(id: string, hierarchyChildren: NodeData[]) {
     }
 }
 
-function generateStructForFlextree(hierarchy: NodeData) {
-    const tOrder: string[] = findTopologicalSortDFS() // To get the topological order of the nodes
-
-    const rootId = tOrder[0]; // Assume: there is only one root
+function generateStructForFlextree(hierarchy: NodeData, rootId: string) {
     hierarchy.id = rootId;
-    
     hierarchy.children = [];
 
     const neighborIds = groupMember.get(rootId)?.next || [];
@@ -66,22 +60,32 @@ function calculateLayoutNodes(nodes: Node<any, string | undefined>[], edges: Edg
     const flextreeFunction = flextree;
     const layout = flextreeFunction(options);
     let hierarchy: NodeData = {} as NodeData;
-    generateStructForFlextree(hierarchy)
+    const tOrder: string[] = findTopologicalSortDFS() // To get the topological order of the nodes
+
+    const rootId = tOrder[0]; // Assume: there is only one root
+    generateStructForFlextree(hierarchy, rootId)
 
     const tree = layout.hierarchy(hierarchy);
     layout(tree);
 
-    nodes.forEach((node) => {
-        const { x, y } = tree.nodes.find(n => n.data.id === node.id) || { x: 0, y: 0 };
-        if (node.position.x !== 0 && node.position.y !== 0) {
-            node.position = { x: x > node.position.x ? x : node.position.x, y: y > node.position.y ? y : node.position.y };
-        } else {
-            node.position = { x, y };
-        }
+    tree.each(node => {
+        const x = node.x;
+        const y = node.y;
 
-        console.log("Position: ", node.id, " --> " , node.position.x, ", ", node.position.y)
-        return node;
-    })
+        const reactFlowNode = nodes.find(n => n.id === node.data.id);
+        console.log(node.data.id, " --> ", x + " " + y);
+        if (reactFlowNode) {
+            if (reactFlowNode.position.x !== 0 && reactFlowNode.position.y !== 0) {
+                reactFlowNode.position = {
+                    x: x > reactFlowNode.position.x ? x : reactFlowNode.position.x,
+                    y: y > reactFlowNode.position.y ? y : reactFlowNode.position.y
+                };
+            } else {
+                reactFlowNode.position = { x, y };
+            }
+        }
+    });
+
 
     return { lNode: nodes, lEdge: edges };
 }

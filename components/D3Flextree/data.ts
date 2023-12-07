@@ -38,7 +38,7 @@ export const mockData: IMockData = {
             ]
         },
         {
-            id: '2', name: 'Comment', next: [], type: GroupType.Single, 
+            id: '2', name: 'Comment', next: ['7'], type: GroupType.Single, 
             members: [
                 { id: '2', name: 'Comment', progress: 0, type: MicroNodeType.Micro }
             ]
