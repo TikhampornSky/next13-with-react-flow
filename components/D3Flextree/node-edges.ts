@@ -28,8 +28,8 @@ export function getInitialNodesAndEdges() {
             id: group.id,
             data: { label: group.name },
             position,
-            // draggable: false,
-            type: group.type === GroupType.Single ? 'default' : 'groupNode'  // TODO: Add GroupType.Unordered and cutom SingleNode to show progress
+            draggable: false,
+            type: group.type === GroupType.Single ? 'singleNode' : 'orderedGroupNode'  // TODO: Add GroupType.Unordered and cutom SingleNode to show progress
         });
 
         groupMember.set(group.id, {name: group.name, next: group.next, members: group.members})

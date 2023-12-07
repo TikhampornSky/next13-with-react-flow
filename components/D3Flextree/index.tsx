@@ -1,10 +1,11 @@
 "use client"
 import { useMemo } from "react";
 import ReactFlow, { useNodesState, useEdgesState, ConnectionLineType, Node, Edge } from "reactflow";
-import GroupNode from "./CustomNode";
 import { flextree, FlextreeOptions } from 'd3-flextree';
 import { getInitialNodesAndEdges, groupMember } from './node-edges';
 import { findTopologicalSortDFS } from "./algorithm";
+import SingleNode from "./CustomNode/SingleNode";
+import OrderedGroupNode from "./CustomNode/OrderedGroupNode";
 
 const nodeWidth = 172;
 const nodeHeight = 36;
@@ -28,7 +29,7 @@ const options: FlextreeOptions<NodeData> = {
 
 function calculateNodeSize(nodeId: string): [number, number] {
     let h = groupMember.get(nodeId)?.members.length || 1;  // TODO: Handle in the case group of unordered
-    return [nodeWidth, nodeHeight * h + 100];
+    return [nodeWidth, (nodeHeight * h)];
 }
 
 function recur(id: string, hierarchyChildren: NodeData[]) {
@@ -49,7 +50,7 @@ function generateStructForFlextree(hierarchy: NodeData) {
 
     const rootId = tOrder[0]; // Assume: there is only one root
     hierarchy.id = rootId;
-    hierarchy.size = calculateNodeSize(rootId);
+    
     hierarchy.children = [];
 
     const neighborIds = groupMember.get(rootId)?.next || [];
@@ -72,8 +73,13 @@ function calculateLayoutNodes(nodes: Node<any, string | undefined>[], edges: Edg
 
     nodes.forEach((node) => {
         const { x, y } = tree.nodes.find(n => n.data.id === node.id) || { x: 0, y: 0 };
-        node.position = { x: x > node.position.x ? x : node.position.x, y: y > node.position.y ? y : node.position.y };
+        if (node.position.x !== 0 && node.position.y !== 0) {
+            node.position = { x: x > node.position.x ? x : node.position.x, y: y > node.position.y ? y : node.position.y };
+        } else {
+            node.position = { x, y };
+        }
 
+        console.log("Position: ", node.id, " --> " , node.position.x, ", ", node.position.y)
         return node;
     })
 
@@ -85,7 +91,7 @@ export default function D3FlexTree() {
     let { lNode, lEdge } = calculateLayoutNodes(initialNodes, initialEdges);
     const [nodes, setNodes, onNodesChange] = useNodesState(lNode);
     const [edges, setEdges, onEdgesChange] = useEdgesState(lEdge);
-    const nodeTypes = useMemo(() => ({ groupNode: GroupNode }), []);
+    const nodeTypes = useMemo(() => ({ orderedGroupNode: OrderedGroupNode, singleNode: SingleNode }), []);
 
     return (
         <div style={{ width: '100vw', height: '100vh' }}>

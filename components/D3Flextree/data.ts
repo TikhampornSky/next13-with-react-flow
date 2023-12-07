@@ -48,7 +48,9 @@ export const mockData: IMockData = {
             members: [
                 { id: '31', name: 'Variable', progress: 80, type: MicroNodeType.Micro },
                 { id: '32', name: 'Expression', progress: 70, type: MicroNodeType.Micro },
-                { id: '33', name: 'Practice #1', progress: 100, type: MicroNodeType.Practice }
+                { id: '33', name: 'Practice #1', progress: 100, type: MicroNodeType.Practice },
+                { id: '34', name: 'Practice #2', progress: 100, type: MicroNodeType.Practice },
+                { id: '35', name: 'Practice #3', progress: 100, type: MicroNodeType.Practice }
             ]
         },
         {
