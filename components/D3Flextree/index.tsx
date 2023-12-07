@@ -6,7 +6,9 @@ import { getInitialNodesAndEdges, groupMember } from './node-edges';
 import { findTopologicalSortDFS } from "./algorithm";
 import SingleNode from "./CustomNode/SingleNode";
 import OrderedGroupNode from "./CustomNode/OrderedGroupNode";
+import UnorderedGroupNode from "./CustomNode/UnorderedGroupNode";
 import { gapBetweenNodeInVertical, nodeHeight, nodeWidth } from "./constant";
+import { GroupType } from "./data";
 
 interface NodeData {
     id: string;
@@ -26,8 +28,24 @@ const options: FlextreeOptions<NodeData> = {
 };
 
 function calculateNodeSize(nodeId: string): [number, number] {
-    let h = groupMember.get(nodeId)?.members.length || 1;  // TODO: Handle in the case group of unordered
-    return [nodeWidth, (nodeHeight * h) + gapBetweenNodeInVertical];
+    const nodeInfo = groupMember.get(nodeId)
+    if (!nodeInfo) {
+        return [nodeWidth, nodeHeight]
+    }
+    let memberCount = nodeInfo.members.length || 1;  // TODO: Handle in the case group of unordered
+    let w, h;
+    if (nodeInfo.type === GroupType.Unordered) {
+        console.log("nodeInfo.type === GroupType.Unordered: ", nodeId)
+        w = nodeWidth * memberCount;
+        h = nodeHeight;
+    } else if (nodeInfo.type === GroupType.Ordered) {
+        w = nodeWidth;
+        h = nodeHeight * memberCount;
+    } else {
+        w = nodeWidth;
+        h = nodeHeight;
+    }
+    return [w, h + gapBetweenNodeInVertical];
 }
 
 function recur(id: string, hierarchyChildren: NodeData[]) {
@@ -73,7 +91,6 @@ function calculateLayoutNodes(nodes: Node<any, string | undefined>[], edges: Edg
         const y = node.y;
 
         const reactFlowNode = nodes.find(n => n.id === node.data.id);
-        console.log(node.data.id, " --> ", x + " " + y);
         if (reactFlowNode) {
             if (reactFlowNode.position.x !== 0 && reactFlowNode.position.y !== 0) {
                 reactFlowNode.position = {
@@ -83,9 +100,15 @@ function calculateLayoutNodes(nodes: Node<any, string | undefined>[], edges: Edg
             } else {
                 reactFlowNode.position = { x, y };
             }
+
+            // Adjust for unordered group node (width not fix)
+            if (reactFlowNode.type === 'unorderedGroupNode') {
+                let memberCount = groupMember.get(reactFlowNode.id)?.members.length || 1;
+                reactFlowNode.position.x -= (nodeWidth/2) * (memberCount / 2)
+            }
+            
         }
     });
-
 
     return { lNode: nodes, lEdge: edges };
 }
@@ -95,7 +118,7 @@ export default function D3FlexTree() {
     let { lNode, lEdge } = calculateLayoutNodes(initialNodes, initialEdges);
     const [nodes, setNodes, onNodesChange] = useNodesState(lNode);
     const [edges, setEdges, onEdgesChange] = useEdgesState(lEdge);
-    const nodeTypes = useMemo(() => ({ orderedGroupNode: OrderedGroupNode, singleNode: SingleNode }), []);
+    const nodeTypes = useMemo(() => ({ orderedGroupNode: OrderedGroupNode, singleNode: SingleNode, unorderedGroupNode: UnorderedGroupNode }), []);
 
     return (
         <div style={{ width: '100vw', height: '100vh' }}>

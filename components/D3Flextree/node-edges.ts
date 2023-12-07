@@ -6,6 +6,7 @@ const edgeType = 'default';
 export interface IGroupValueMap {
     name: string;
     next: string[];
+    type: GroupType;
     members: IMicroNode[];
 }
 export let groupMember = new Map<string, IGroupValueMap>() // key: {group node id, group name}, value: node's member
@@ -29,10 +30,10 @@ export function getInitialNodesAndEdges() {
             data: { label: group.name },
             position,
             draggable: false,
-            type: group.type === GroupType.Single ? 'singleNode' : 'orderedGroupNode'  // TODO: Add GroupType.Unordered and cutom SingleNode to show progress
+            type: group.type === GroupType.Single ? 'singleNode' : group.type === GroupType.Ordered ? 'orderedGroupNode' : 'unorderedGroupNode',
         });
 
-        groupMember.set(group.id, {name: group.name, next: group.next, members: group.members})
+        groupMember.set(group.id, {name: group.name, type: group.type, next: group.next, members: group.members})
 
         group.next.forEach(next => {
             initialEdges.push({
