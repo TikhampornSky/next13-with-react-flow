@@ -3,7 +3,8 @@ import { useMemo } from "react";
 import ReactFlow, { useNodesState, useEdgesState, ConnectionLineType, Node, Edge } from "reactflow";
 import GroupNode from "./CustomNode";
 import { flextree, FlextreeOptions } from 'd3-flextree';
-import { initialNodes, initialEdges, groupMember } from './node-edges';
+import { getInitialNodesAndEdges, groupMember } from './node-edges';
+import { findTopologicalSortDFS } from "./algorithm";
 
 const nodeWidth = 172;
 const nodeHeight = 36;
@@ -24,24 +25,50 @@ const options: FlextreeOptions<NodeData> = {
     }
 };
 
-function calculateNodeSize(node: Node<any, string | undefined>) {
-    let result = [nodeWidth, nodeHeight];
-    if (node.type === 'groupNode') {
-        let h = groupMember.get(node.id)?.length || 1;
-        return [nodeWidth, nodeHeight*h];
-    }
-    return result;
+function calculateNodeSize(nodeId: string): [number, number] {
+    let h = groupMember.get(nodeId)?.members.length || 1;
+    return [nodeWidth, nodeHeight * h];
 }
 
-function generateStructForFlextree(nodes: Node<any, string | undefined>[]) {
-    let struct: NodeData = {} as NodeData;
-    // TODO: generate struct for flextree
-    return struct;
+function recur(id: string, hierarchyChildren: NodeData[]) {
+    let s: NodeData = {} as NodeData;
+    s.id = id
+    s.size = calculateNodeSize(id);
+    s.children = [];
+    hierarchyChildren.push(s);
+    
+    const neighborIds = groupMember.get(id)?.next || [];
+    for (let i = 0; i < neighborIds.length; i++) {
+        const neighborId = neighborIds[i];
+        recur(neighborId, s.children);
+    }
+}
+
+function generateStructForFlextree(hierarchy: NodeData) {
+    const tOrder: string[] = findTopologicalSortDFS() // To get the topological order of the nodes
+
+    const rootId = tOrder[0]; // Assume: there is only one root
+    hierarchy.id = rootId;
+    hierarchy.size = calculateNodeSize(rootId);
+    hierarchy.children = [];
+
+    const neighborIds = groupMember.get(rootId)?.next || [];
+    for (let i = 0; i < neighborIds.length; i++) {
+        const neighborId = neighborIds[i];
+        recur(neighborId, hierarchy.children);
+    }
+
+    return hierarchy;
 }
 
 function calculateLayoutNodes(nodes: Node<any, string | undefined>[], edges: Edge<any>[]) {
-    const flextree2 = flextree;
-    const layout = flextree2(options);
+    const flextreeFunction = flextree;
+    const layout = flextreeFunction(options);
+    let hierarchy: NodeData = {} as NodeData;
+    generateStructForFlextree(hierarchy)
+
+    console.log("My Hierarchy: ", hierarchy)
+    // const tree = layout.hierarchy(hierarchy);
     const tree = layout.hierarchy({
         id: 'root',
         size: [1, 1],
@@ -54,9 +81,9 @@ function calculateLayoutNodes(nodes: Node<any, string | undefined>[], edges: Edg
                 id: 'b',
                 size: [3, 1],
                 children: [
-                    { 
+                    {
                         id: 'c',
-                        size: [4, 1] 
+                        size: [4, 1]
                     },
                 ],
             },
@@ -69,6 +96,7 @@ function calculateLayoutNodes(nodes: Node<any, string | undefined>[], edges: Edg
 }
 
 export default function D3FlexTree() {
+    const { initialNodes, initialEdges } = getInitialNodesAndEdges();
     const { nodes: layoutedNodes, edges: layoutedEdges } = calculateLayoutNodes(initialNodes, initialEdges);
     const [nodes, setNodes, onNodesChange] = useNodesState(layoutedNodes);
     const [edges, setEdges, onEdgesChange] = useEdgesState(layoutedEdges);
