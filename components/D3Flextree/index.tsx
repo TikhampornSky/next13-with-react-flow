@@ -17,23 +17,23 @@ interface NodeData {
 
 const options: FlextreeOptions<NodeData> = {
     nodeSize: (node) => {
-        return [node.data.id.length * 10, 20];
+        let sizee = calculateNodeSize(node.data.id!)
+        return sizee;
     },
-    spacing: 20,
+    spacing: 200,
     children: (node) => {
         return node.children;
     }
 };
 
 function calculateNodeSize(nodeId: string): [number, number] {
-    let h = groupMember.get(nodeId)?.members.length || 1;
-    return [nodeWidth, nodeHeight * h];
+    let h = groupMember.get(nodeId)?.members.length || 1;  // TODO: Handle in the case group of unordered
+    return [nodeWidth, nodeHeight * h + 100];
 }
 
 function recur(id: string, hierarchyChildren: NodeData[]) {
     let s: NodeData = {} as NodeData;
     s.id = id
-    s.size = calculateNodeSize(id);
     s.children = [];
     hierarchyChildren.push(s);
     
@@ -67,45 +67,30 @@ function calculateLayoutNodes(nodes: Node<any, string | undefined>[], edges: Edg
     let hierarchy: NodeData = {} as NodeData;
     generateStructForFlextree(hierarchy)
 
-    console.log("My Hierarchy: ", hierarchy)
-    // const tree = layout.hierarchy(hierarchy);
-    const tree = layout.hierarchy({
-        id: 'root',
-        size: [1, 1],
-        children: [
-            {
-                id: 'a',
-                size: [2, 4]
-            },
-            {
-                id: 'b',
-                size: [3, 1],
-                children: [
-                    {
-                        id: 'c',
-                        size: [4, 1]
-                    },
-                ],
-            },
-        ],
-    });
+    const tree = layout.hierarchy(hierarchy);
     layout(tree);
-    tree.each(node => console.log(`${node.data.id} ==> (${node.x}, ${node.y})`));
 
-    return { nodes, edges };
+    nodes.forEach((node) => {
+        const { x, y } = tree.nodes.find(n => n.data.id === node.id) || { x: 0, y: 0 };
+        node.position = { x: x > node.position.x ? x : node.position.x, y: y > node.position.y ? y : node.position.y };
+
+        return node;
+    })
+
+    return { lNode: nodes, lEdge: edges };
 }
 
 export default function D3FlexTree() {
     const { initialNodes, initialEdges } = getInitialNodesAndEdges();
-    const { nodes: layoutedNodes, edges: layoutedEdges } = calculateLayoutNodes(initialNodes, initialEdges);
-    const [nodes, setNodes, onNodesChange] = useNodesState(layoutedNodes);
-    const [edges, setEdges, onEdgesChange] = useEdgesState(layoutedEdges);
+    let { lNode, lEdge } = calculateLayoutNodes(initialNodes, initialEdges);
+    const [nodes, setNodes, onNodesChange] = useNodesState(lNode);
+    const [edges, setEdges, onEdgesChange] = useEdgesState(lEdge);
     const nodeTypes = useMemo(() => ({ groupNode: GroupNode }), []);
 
     return (
         <div style={{ width: '100vw', height: '100vh' }}>
             <h1> D3FlexTree </h1>
-            {/* <ReactFlow
+            <ReactFlow
                 nodes={nodes}
                 edges={edges}
                 onNodesChange={onNodesChange}
@@ -114,7 +99,7 @@ export default function D3FlexTree() {
                 fitView
                 nodeTypes={nodeTypes}
             >
-            </ReactFlow> */}
+            </ReactFlow>
         </div>
     );
 }
