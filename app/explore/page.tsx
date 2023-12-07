@@ -15,8 +15,8 @@ export default function Explore() {
             <Grid item>
                 <Item>
                     {/* <LayoutFlow />  */}
-                    {/* <D3FlexTree /> */}
-                    <EntitreeTree />
+                    <D3FlexTree />
+                    {/* <EntitreeTree /> */}
                 </Item>
             </Grid>
         </Grid>

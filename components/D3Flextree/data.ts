@@ -58,10 +58,6 @@ export const mockData: IMockData = {
             members: [
                 { id: '41', name: 'Bitwise', progress: 90, type: MicroNodeType.Micro },
                 { id: '42', name: 'Arithmatic', progress: 0, type: MicroNodeType.Micro },
-                { id: '43', name: 'Bitwise 2', progress: 90, type: MicroNodeType.Micro },
-                { id: '44', name: 'Arithmatic 2', progress: 0, type: MicroNodeType.Micro },
-                { id: '45', name: 'Bitwise 3', progress: 90, type: MicroNodeType.Micro },
-                { id: '46', name: 'Arithmatic 3', progress: 0, type: MicroNodeType.Micro },
             ]
         },
         {
@@ -91,5 +87,13 @@ export const mockData: IMockData = {
                 { id: '8', name: 'Comment 2', progress: 0, type: MicroNodeType.Micro }
             ]
         },
+        // {
+        //     id: '9', name: 'Operator2', next: [], type: GroupType.Unordered, 
+        //     members: [
+        //         { id: '91', name: 'Bitwise', progress: 90, type: MicroNodeType.Micro },
+        //         { id: '92', name: 'Arithmatic', progress: 0, type: MicroNodeType.Micro },
+        //         { id: '93', name: 'Arithmatic 2', progress: 0, type: MicroNodeType.Micro },
+        //     ]
+        // },
     ]
 }

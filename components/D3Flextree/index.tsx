@@ -21,7 +21,7 @@ const options: FlextreeOptions<NodeData> = {
         let sizee = calculateNodeSize(node.data.id!)
         return sizee;
     },
-    spacing: 200,
+    spacing: 100,
     children: (node) => {
         return node.children;
     }
@@ -32,10 +32,9 @@ function calculateNodeSize(nodeId: string): [number, number] {
     if (!nodeInfo) {
         return [nodeWidth, nodeHeight]
     }
-    let memberCount = nodeInfo.members.length || 1;  // TODO: Handle in the case group of unordered
+    let memberCount = nodeInfo.members.length || 1;
     let w, h;
     if (nodeInfo.type === GroupType.Unordered) {
-        console.log("nodeInfo.type === GroupType.Unordered: ", nodeId)
         w = nodeWidth * memberCount;
         h = nodeHeight;
     } else if (nodeInfo.type === GroupType.Ordered) {
@@ -45,6 +44,7 @@ function calculateNodeSize(nodeId: string): [number, number] {
         w = nodeWidth;
         h = nodeHeight;
     }
+    // console.log("calculateNodeSize: ", nodeId, w, h)
     return [w, h + gapBetweenNodeInVertical];
 }
 
@@ -101,10 +101,12 @@ function calculateLayoutNodes(nodes: Node<any, string | undefined>[], edges: Edg
                 reactFlowNode.position = { x, y };
             }
 
+            reactFlowNode.data.label += " - " + reactFlowNode.id;
+
             // Adjust for unordered group node (width not fix)
             if (reactFlowNode.type === 'unorderedGroupNode') {
-                let memberCount = groupMember.get(reactFlowNode.id)?.members.length || 1;
-                reactFlowNode.position.x -= (nodeWidth/2) * (memberCount / 2)
+                reactFlowNode.position.x -= nodeWidth / 2 ;
+                reactFlowNode.position.y -= nodeHeight / 2;
             }
             
         }
