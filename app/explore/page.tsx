@@ -5,20 +5,23 @@ import EntitreeTree from "@/components/EntitreeFlex";
 import { Grid } from "@mui/material";
 
 export default function Explore() {
+    // return (
+    //     <Grid
+    //         container
+    //         direction="column"
+    //         justifyContent="center"
+    //         alignItems="center"
+    //     >
+    //         <Grid item>
+    //             <Item>
+    //                 {/* <LayoutFlow />  */}
+    //                 <D3FlexTree />
+    //                 {/* <EntitreeTree /> */}
+    //             </Item>
+    //         </Grid>
+    //     </Grid>
+    // )
     return (
-        <Grid
-            container
-            direction="column"
-            justifyContent="center"
-            alignItems="center"
-        >
-            <Grid item>
-                <Item>
-                    {/* <LayoutFlow />  */}
-                    <D3FlexTree />
-                    {/* <EntitreeTree /> */}
-                </Item>
-            </Grid>
-        </Grid>
+        <D3FlexTree />
     )
 }

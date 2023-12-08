@@ -1,6 +1,6 @@
 "use client"
 import { useMemo } from "react";
-import ReactFlow, { useNodesState, useEdgesState, ConnectionLineType, Node, Edge } from "reactflow";
+import ReactFlow, { useNodesState, useEdgesState, ConnectionLineType, Node, Edge, PanOnScrollMode, Background, MiniMap, BackgroundVariant } from "reactflow";
 import { flextree, FlextreeOptions } from 'd3-flextree';
 import { getInitialNodesAndEdges, groupMember } from './node-edges';
 import { findTopologicalSortDFS } from "./algorithm";
@@ -9,7 +9,8 @@ import OrderedGroupNode from "./CustomNode/OrderedGroupNode";
 import UnorderedGroupNode from "./CustomNode/UnorderedGroupNode";
 import { gapBetweenNodeInVertical, nodeHeight, nodeWidth } from "./constant";
 import { GroupType } from "./data";
-
+import 'reactflow/dist/style.css';
+ 
 interface NodeData {
     id: string;
     children?: NodeData[];
@@ -101,14 +102,13 @@ function calculateLayoutNodes(nodes: Node<any, string | undefined>[], edges: Edg
                 reactFlowNode.position = { x, y };
             }
 
-            reactFlowNode.data.label += " - " + reactFlowNode.id;
-
             // Adjust for unordered group node (width not fix)
             if (reactFlowNode.type === 'unorderedGroupNode') {
-                reactFlowNode.position.x -= nodeWidth / 2 ;
+                reactFlowNode.position.x -= nodeWidth / 2;
                 reactFlowNode.position.y -= nodeHeight / 2;
             }
-            
+            // console.log(reactFlowNode.id + " --> " + reactFlowNode.position.x + " " + reactFlowNode.position.y)
+
         }
     });
 
@@ -123,8 +123,8 @@ export default function D3FlexTree() {
     const nodeTypes = useMemo(() => ({ orderedGroupNode: OrderedGroupNode, singleNode: SingleNode, unorderedGroupNode: UnorderedGroupNode }), []);
 
     return (
-        <div style={{ width: '100vw', height: '100vh' }}>
-            <h1> D3FlexTree </h1>
+        <div style={{ width: 'auto', height: '100vh', overflowX: 'auto', overscrollBehaviorY: 'none', backgroundColor: 'white' }}>
+            <h1 style={{textAlign: 'center', backgroundColor: 'pink' }}> D3FlexTree </h1>
             <ReactFlow
                 nodes={nodes}
                 edges={edges}
@@ -133,7 +133,14 @@ export default function D3FlexTree() {
                 connectionLineType={ConnectionLineType.SmoothStep}
                 fitView
                 nodeTypes={nodeTypes}
+                panOnDrag={false}
+                panOnScroll={true}
+                // panOnScrollMode={PanOnScrollMode.Vertical}
+                maxZoom={1}
+                minZoom={1}
             >
+                <MiniMap />
+                <Background variant={BackgroundVariant.Dots} gap={20} size={1} />
             </ReactFlow>
         </div>
     );

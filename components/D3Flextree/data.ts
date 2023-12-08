@@ -44,7 +44,7 @@ export const mockData: IMockData = {
             ]
         },
         {
-            id: '3', name: 'Syntax', next: ['4'], type: GroupType.Ordered, 
+            id: '3', name: 'Syntax', next: ['4', '9'], type: GroupType.Ordered, 
             members: [
                 { id: '31', name: 'Variable', progress: 80, type: MicroNodeType.Micro },
                 { id: '32', name: 'Expression', progress: 70, type: MicroNodeType.Micro },
@@ -61,22 +61,24 @@ export const mockData: IMockData = {
             ]
         },
         {
-            id: '5', name: 'Control Flow', next: ['7'], type: GroupType.Ordered, 
+            id: '5', name: 'Control Flow', next: ['7'], type: GroupType.Unordered, 
             members: [
                 { id: '51', name: 'Conditional', progress: 50, type: MicroNodeType.Micro },
                 { id: '52', name: 'Loop', progress: 0, type: MicroNodeType.Micro },
                 { id: '53', name: 'Function', progress: 0, type: MicroNodeType.Micro },
+                { id: '54', name: 'Loop', progress: 0, type: MicroNodeType.Micro },
+                { id: '55', name: 'Function', progress: 0, type: MicroNodeType.Micro },
             ]
         },
         {
-            id: '6', name: 'Useful Library', next: ['7'], type: GroupType.Ordered, 
+            id: '6', name: 'Useful Library', next: ['7'], type: GroupType.Unordered, 
             members: [
                 { id: '61', name: 'Built-in function', progress: 0, type: MicroNodeType.Micro },
                 { id: '62', name: 'Standard library', progress: 0, type: MicroNodeType.Micro },
             ]
         },
         {
-            id: '7', name: 'Python Final Test', next: [], type: GroupType.Single, 
+            id: '7', name: 'Python Final Test', next: ['10'], type: GroupType.Single, 
             members: [
                 { id: '7', name: 'Python Final Test', progress: 0, type: MicroNodeType.Test }
             ]
@@ -87,13 +89,34 @@ export const mockData: IMockData = {
                 { id: '8', name: 'Comment 2', progress: 0, type: MicroNodeType.Micro }
             ]
         },
-        // {
-        //     id: '9', name: 'Operator2', next: [], type: GroupType.Unordered, 
-        //     members: [
-        //         { id: '91', name: 'Bitwise', progress: 90, type: MicroNodeType.Micro },
-        //         { id: '92', name: 'Arithmatic', progress: 0, type: MicroNodeType.Micro },
-        //         { id: '93', name: 'Arithmatic 2', progress: 0, type: MicroNodeType.Micro },
-        //     ]
-        // },
+        {
+            id: '9', name: 'Operator2', next: [], type: GroupType.Unordered, 
+            members: [
+                { id: '91', name: 'Bitwise', progress: 90, type: MicroNodeType.Micro },
+                { id: '92', name: 'Arithmatic', progress: 0, type: MicroNodeType.Micro },
+                { id: '93', name: 'Arithmatic 2', progress: 0, type: MicroNodeType.Micro },
+                { id: '94', name: 'Bitwise', progress: 90, type: MicroNodeType.Micro },
+                // { id: '95', name: 'Arithmatic', progress: 0, type: MicroNodeType.Micro },
+                // { id: '96', name: 'Arithmatic 2', progress: 0, type: MicroNodeType.Micro },
+            ]
+        },
+        {
+            id: '10', name: 'Syntax', next: [], type: GroupType.Ordered, 
+            members: [
+                { id: '101', name: 'Variable', progress: 80, type: MicroNodeType.Micro },
+                { id: '102', name: 'Expression', progress: 70, type: MicroNodeType.Micro },
+                { id: '103', name: 'Practice #1', progress: 100, type: MicroNodeType.Practice },
+                { id: '104', name: 'Practice #2', progress: 100, type: MicroNodeType.Practice },
+                { id: '105', name: 'Practice #3', progress: 100, type: MicroNodeType.Practice },
+                { id: '106', name: 'Variable', progress: 80, type: MicroNodeType.Micro },
+                { id: '107', name: 'Expression', progress: 70, type: MicroNodeType.Micro },
+                { id: '108', name: 'Practice #1', progress: 100, type: MicroNodeType.Practice },
+                { id: '109', name: 'Practice #2', progress: 100, type: MicroNodeType.Practice },
+                { id: '1010', name: 'Practice #3', progress: 100, type: MicroNodeType.Practice },
+                { id: '1011', name: 'Practice #1', progress: 100, type: MicroNodeType.Practice },
+                { id: '1012', name: 'Practice #2', progress: 100, type: MicroNodeType.Practice },
+                { id: '1013', name: 'Practice #3', progress: 100, type: MicroNodeType.Practice }
+            ]
+        },
     ]
 }
