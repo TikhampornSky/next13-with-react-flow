@@ -29,7 +29,7 @@ export function getInitialNodesAndEdges() {
             id: group.id,
             data: { label: group.name },
             position,
-            draggable: false,
+            draggable: true,
             type: group.type === GroupType.Single ? 'singleNode' : group.type === GroupType.Ordered ? 'orderedGroupNode' : 'unorderedGroupNode',
         });
 

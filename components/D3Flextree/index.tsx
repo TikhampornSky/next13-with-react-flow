@@ -45,7 +45,11 @@ function calculateNodeSize(nodeId: string): [number, number] {
         w = nodeWidth;
         h = nodeHeight;
     }
-    // console.log("calculateNodeSize: ", nodeId, w, h)
+    
+    // if (nodeInfo.type === GroupType.Unordered) {
+    //     console.log("calculateNodeSize: ", nodeId, w, h)
+    // }
+
     return [w, h + gapBetweenNodeInVertical];
 }
 
@@ -103,10 +107,11 @@ function calculateLayoutNodes(nodes: Node<any, string | undefined>[], edges: Edg
             }
 
             // Adjust for unordered group node (width not fix)
-            if (reactFlowNode.type === 'unorderedGroupNode') {
-                reactFlowNode.position.x -= nodeWidth / 2;
-                reactFlowNode.position.y -= nodeHeight / 2;
-            }
+            // if (reactFlowNode.type === 'unorderedGroupNode') {
+            //     reactFlowNode.position.x -= nodeWidth / 2;
+            //     reactFlowNode.position.y -= nodeHeight / 2;
+            // }
+            reactFlowNode.data.label = reactFlowNode.id + " - " + reactFlowNode.data.label
             // console.log(reactFlowNode.id + " --> " + reactFlowNode.position.x + " " + reactFlowNode.position.y)
 
         }
@@ -123,7 +128,7 @@ export default function D3FlexTree() {
     const nodeTypes = useMemo(() => ({ orderedGroupNode: OrderedGroupNode, singleNode: SingleNode, unorderedGroupNode: UnorderedGroupNode }), []);
 
     return (
-        <div style={{ width: 'auto', height: '100vh', overflowX: 'auto', overscrollBehaviorY: 'none', backgroundColor: 'white' }}>
+        <div style={{ width: '100wh', height: '100vh', overflowX: 'auto', overscrollBehaviorY: 'none', backgroundColor: 'white' }}>
             <h1 style={{textAlign: 'center', backgroundColor: 'pink' }}> D3FlexTree </h1>
             <ReactFlow
                 nodes={nodes}

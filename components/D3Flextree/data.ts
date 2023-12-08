@@ -65,9 +65,9 @@ export const mockData: IMockData = {
             members: [
                 { id: '51', name: 'Conditional', progress: 50, type: MicroNodeType.Micro },
                 { id: '52', name: 'Loop', progress: 0, type: MicroNodeType.Micro },
-                { id: '53', name: 'Function', progress: 0, type: MicroNodeType.Micro },
-                { id: '54', name: 'Loop', progress: 0, type: MicroNodeType.Micro },
-                { id: '55', name: 'Function', progress: 0, type: MicroNodeType.Micro },
+                { id: '53', name: 'Function 1', progress: 0, type: MicroNodeType.Micro },
+                { id: '54', name: 'Loop 1', progress: 0, type: MicroNodeType.Micro },
+                { id: '55', name: 'Function 2', progress: 0, type: MicroNodeType.Micro },
             ]
         },
         {
