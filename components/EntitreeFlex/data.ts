@@ -55,7 +55,7 @@ export const mockData: IMockData = {
             ]
         },
         {
-            id: '4', name: 'Operator', next: ['5', '6'], type: GroupType.Unordered, 
+            id: '4', name: 'Operator', next: ['5', '6'], type: GroupType.Ordered, 
             members: [
                 { id: '41', name: 'Bitwise', progress: 90, type: MicroNodeType.Micro },
                 { id: '42', name: 'Arithmatic', progress: 0, type: MicroNodeType.Micro },
@@ -69,13 +69,13 @@ export const mockData: IMockData = {
             id: '5', name: 'Control Flow', next: ['7'], type: GroupType.Unordered, 
             members: [
                 { id: '51', name: 'Conditional', progress: 50, type: MicroNodeType.Micro },
-                { id: '52', name: 'Loop', progress: 0, type: MicroNodeType.Micro },
-                { id: '53', name: 'Function 1', progress: 0, type: MicroNodeType.Micro },
-                { id: '54', name: 'Loop 1', progress: 0, type: MicroNodeType.Micro },
-                { id: '55', name: 'Function 2', progress: 0, type: MicroNodeType.Micro },
-                { id: '56', name: 'Function 3', progress: 0, type: MicroNodeType.Micro },
-                { id: '57', name: 'Loop 2', progress: 0, type: MicroNodeType.Micro },
-                { id: '58', name: 'Function 4', progress: 0, type: MicroNodeType.Micro },
+                // { id: '52', name: 'Loop', progress: 0, type: MicroNodeType.Micro },
+                // { id: '53', name: 'Function 1', progress: 0, type: MicroNodeType.Micro },
+                // { id: '54', name: 'Loop 1', progress: 0, type: MicroNodeType.Micro },
+                // { id: '55', name: 'Function 2', progress: 0, type: MicroNodeType.Micro },
+                // { id: '56', name: 'Function 3', progress: 0, type: MicroNodeType.Micro },
+                // { id: '57', name: 'Loop 2', progress: 0, type: MicroNodeType.Micro },
+                // { id: '58', name: 'Function 4', progress: 0, type: MicroNodeType.Micro },
             ]
         },
         {
@@ -98,14 +98,12 @@ export const mockData: IMockData = {
             ]
         },
         {
-            id: '9', name: 'Operator2', next: [], type: GroupType.Unordered, 
+            id: '9', name: 'Operator2', next: [], type: GroupType.Ordered, 
             members: [
                 { id: '91', name: 'Bitwise', progress: 90, type: MicroNodeType.Micro },
                 { id: '92', name: 'Arithmatic', progress: 0, type: MicroNodeType.Micro },
                 { id: '93', name: 'Arithmatic 2', progress: 0, type: MicroNodeType.Micro },
                 { id: '94', name: 'Bitwise', progress: 90, type: MicroNodeType.Micro },
-                // { id: '95', name: 'Arithmatic', progress: 0, type: MicroNodeType.Micro },
-                // { id: '96', name: 'Arithmatic 2', progress: 0, type: MicroNodeType.Micro },
             ]
         },
         {

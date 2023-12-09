@@ -71,7 +71,7 @@ function calculateLayoutNodes(reactFlownodes: Node<any, string | undefined>[], e
     const rootId = tOrder[0]; // Assume: there is only one root
     generateStructForFlextree(hierarchy, reactFlownodes)
 
-    const { nodes } = layoutFromMap(rootId, hierarchy, defaultSettings);
+    const { map, maxBottom, maxLeft, maxRight, maxTop, nodes, rels } = layoutFromMap(rootId, hierarchy, defaultSettings);
     nodes.forEach((node) => {
         const reactFlowNode = reactFlownodes.find((value) => value.data.label === node.name)
         if (reactFlowNode) {
@@ -79,12 +79,12 @@ function calculateLayoutNodes(reactFlownodes: Node<any, string | undefined>[], e
         }
     })
 
-    return { lNode: reactFlownodes, lEdge: edges };
+    return { lNode: reactFlownodes, lEdge: edges, maxCoordinate: { maxBottom, maxLeft, maxRight, maxTop } };
 }
 
 export default function EntitreeTree() {
     const { initialNodes, initialEdges } = getInitialNodesAndEdges();
-    let { lNode, lEdge } = calculateLayoutNodes(initialNodes, initialEdges);
+    let { lNode, lEdge, maxCoordinate } = calculateLayoutNodes(initialNodes, initialEdges);
     const [nodes, setNodes, onNodesChange] = useNodesState(lNode);
     const [edges, setEdges, onEdgesChange] = useEdgesState(lEdge);
     const nodeTypes = useMemo(() => ({ orderedGroupNode: OrderedGroupNode, singleNode: SingleNode, unorderedGroupNode: UnorderedGroupNode }), []);
@@ -98,13 +98,16 @@ export default function EntitreeTree() {
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
             connectionLineType={ConnectionLineType.SmoothStep}
-            fitView
             nodeTypes={nodeTypes}
             panOnDrag={false}
             panOnScroll={true}
             // panOnScrollMode={PanOnScrollMode.Vertical}
             maxZoom={1}
             minZoom={1}
+            translateExtent={[
+                [maxCoordinate.maxLeft, maxCoordinate.maxTop - 50],
+                [maxCoordinate.maxRight, maxCoordinate.maxBottom + 50],
+            ]}
         >
             <MiniMap />
             <Background variant={BackgroundVariant.Dots} gap={20} size={1} />
