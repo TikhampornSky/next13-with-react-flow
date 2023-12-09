@@ -1,16 +1,15 @@
 "use client"
 import { useMemo } from "react";
-import ReactFlow, { useNodesState, useEdgesState, ConnectionLineType, Node, Edge } from "reactflow";
-// import { flextree, FlextreeOptions } from 'd3-flextree';
+import ReactFlow, { useNodesState, useEdgesState, ConnectionLineType, Node, Edge, Background, MiniMap, BackgroundVariant } from "reactflow";
 import { layoutFromMap } from "entitree-flex";
 import { getInitialNodesAndEdges, groupMember, parents } from './node-edges';
 import { findTopologicalSortDFS } from "./algorithm";
-import SingleNode from "./CustomNode/SingleNode";
-import OrderedGroupNode from "./CustomNode/OrderedGroupNode";
-import UnorderedGroupNode from "./CustomNode/UnorderedGroupNode";
-import { gapBetweenNodeInVertical, nodeHeight, nodeWidth } from "./constant";
+import { gapBetweenNodeInHorizontal, gapBetweenNodeInVertical, nodeHeight, nodeWidth } from "./constant";
 import { GroupType } from "./data";
 import { defaultSettings } from "./setting";
+import OrderedGroupNode from "./CustomNode/OrderedGroupNode";
+import SingleNode from "./CustomNode/SingleNode";
+import UnorderedGroupNode from "./CustomNode/UnorderedGroupNode";
 
 interface TreeNode {
     name: string;
@@ -42,7 +41,7 @@ function calculateNodeSize(nodeId: string): [number, number] {
         w = nodeWidth;
         h = nodeHeight;
     }
-    return [w, h + gapBetweenNodeInVertical];
+    return [w + gapBetweenNodeInHorizontal, h + gapBetweenNodeInVertical];
 }
 
 function generateStructForFlextree(hierarchy: NodeData, nodes: Node<any, string | undefined>[]) {
@@ -72,7 +71,7 @@ function calculateLayoutNodes(reactFlownodes: Node<any, string | undefined>[], e
     const rootId = tOrder[0]; // Assume: there is only one root
     generateStructForFlextree(hierarchy, reactFlownodes)
 
-    const { map, maxBottom, maxLeft, maxRight, maxTop, nodes, rels } = layoutFromMap(rootId, hierarchy);
+    const { map, maxBottom, maxLeft, maxRight, maxTop, nodes, rels } = layoutFromMap(rootId, hierarchy, defaultSettings);
     nodes.forEach((node) => {
         const reactFlowNode = reactFlownodes.find((value) => value.data.label === node.name)
         if (reactFlowNode) {
@@ -91,18 +90,25 @@ export default function EntitreeTree() {
     const nodeTypes = useMemo(() => ({ orderedGroupNode: OrderedGroupNode, singleNode: SingleNode, unorderedGroupNode: UnorderedGroupNode }), []);
 
     return (
-        <div style={{ width: '100vw', height: '100vh' }}>
-            <h1> Entitree Flex </h1>
-            <ReactFlow
-                nodes={nodes}
-                edges={edges}
-                onNodesChange={onNodesChange}
-                onEdgesChange={onEdgesChange}
-                connectionLineType={ConnectionLineType.SmoothStep}
-                fitView
-                nodeTypes={nodeTypes}
-            >
-            </ReactFlow>
-        </div>
+        <div style={{ width: '100wh', height: '100vh', overflowX: 'auto', overscrollBehaviorY: 'none', backgroundColor: 'white' }}>
+        <h1 style={{textAlign: 'center', backgroundColor: 'pink' }}> EntitreeFlex </h1>
+        <ReactFlow
+            nodes={nodes}
+            edges={edges}
+            onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
+            connectionLineType={ConnectionLineType.SmoothStep}
+            fitView
+            nodeTypes={nodeTypes}
+            // panOnDrag={false}
+            // panOnScroll={true}
+            // // panOnScrollMode={PanOnScrollMode.Vertical}
+            // maxZoom={1}
+            // minZoom={1}
+        >
+            <MiniMap />
+            <Background variant={BackgroundVariant.Dots} gap={20} size={1} />
+        </ReactFlow>
+    </div>
     );
 }
