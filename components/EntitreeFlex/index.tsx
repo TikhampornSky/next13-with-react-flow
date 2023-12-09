@@ -71,7 +71,7 @@ function calculateLayoutNodes(reactFlownodes: Node<any, string | undefined>[], e
     const rootId = tOrder[0]; // Assume: there is only one root
     generateStructForFlextree(hierarchy, reactFlownodes)
 
-    const { map, maxBottom, maxLeft, maxRight, maxTop, nodes, rels } = layoutFromMap(rootId, hierarchy, defaultSettings);
+    const { nodes } = layoutFromMap(rootId, hierarchy, defaultSettings);
     nodes.forEach((node) => {
         const reactFlowNode = reactFlownodes.find((value) => value.data.label === node.name)
         if (reactFlowNode) {
@@ -100,11 +100,11 @@ export default function EntitreeTree() {
             connectionLineType={ConnectionLineType.SmoothStep}
             fitView
             nodeTypes={nodeTypes}
-            // panOnDrag={false}
-            // panOnScroll={true}
-            // // panOnScrollMode={PanOnScrollMode.Vertical}
-            // maxZoom={1}
-            // minZoom={1}
+            panOnDrag={false}
+            panOnScroll={true}
+            // panOnScrollMode={PanOnScrollMode.Vertical}
+            maxZoom={1}
+            minZoom={1}
         >
             <MiniMap />
             <Background variant={BackgroundVariant.Dots} gap={20} size={1} />
