@@ -1,6 +1,6 @@
 "use client"
 import { useMemo } from "react";
-import ReactFlow, { useNodesState, useEdgesState, ConnectionLineType, Node, Edge, Background, MiniMap, BackgroundVariant } from "reactflow";
+import ReactFlow, { useNodesState, useEdgesState, ConnectionLineType, Node, Edge, Background, MiniMap, BackgroundVariant, PanOnScrollMode } from "reactflow";
 import { layoutFromMap } from "entitree-flex";
 import { getInitialNodesAndEdges, groupMember, parents } from './node-edges';
 import { findTopologicalSortDFS } from "./algorithm";
@@ -101,7 +101,7 @@ export default function EntitreeTree() {
             nodeTypes={nodeTypes}
             panOnDrag={false}
             panOnScroll={true}
-            // panOnScrollMode={PanOnScrollMode.Vertical}
+            panOnScrollMode={PanOnScrollMode.Vertical}
             maxZoom={1}
             minZoom={1}
             translateExtent={[
