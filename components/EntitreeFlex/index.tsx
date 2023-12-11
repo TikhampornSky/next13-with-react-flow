@@ -3,7 +3,7 @@ import { useMemo } from "react";
 import ReactFlow, { useNodesState, useEdgesState, ConnectionLineType, Node, Edge, Background, MiniMap, BackgroundVariant, PanOnScrollMode } from "reactflow";
 import { layoutFromMap } from "entitree-flex";
 import { getInitialNodesAndEdges, groupMember, parents } from './node-edges';
-import { gapBetweenNodeInHorizontal, gapBetweenNodeInVertical, nodeHeight, nodeWidth } from "./constant";
+import { nodeHeight, nodeWidth } from "./constant";
 import { GroupType } from "./data";
 import { defaultSettings } from "./setting";
 import OrderedGroupNode from "./CustomNode/OrderedGroupNode";
@@ -29,7 +29,7 @@ function calculateNodeSize(nodeId: string): [number, number] {
     if (!nodeInfo) {
         return [nodeWidth, nodeHeight]
     }
-    let memberCount = nodeInfo.members.length; 
+    let memberCount = nodeInfo.members.length;
     let w, h;
     if (nodeInfo.type === GroupType.Unordered) {
         w = nodeWidth * memberCount;
@@ -41,7 +41,7 @@ function calculateNodeSize(nodeId: string): [number, number] {
         w = nodeWidth;
         h = nodeHeight;
     }
-    return [w + gapBetweenNodeInHorizontal, h + gapBetweenNodeInVertical];
+    return [w, h];
 }
 
 function generateStructForFlextree(hierarchy: NodeData, nodes: Node<any, string | undefined>[]) {
@@ -59,7 +59,7 @@ function generateStructForFlextree(hierarchy: NodeData, nodes: Node<any, string 
             height: sizee[1],
             children: groupMember.get(node.id!)?.next || [],
             spouses: [],
-            parents: myParents, 
+            parents: myParents,
         }
     })
 }
@@ -70,13 +70,19 @@ function calculateLayoutNodes(reactFlownodes: Node<any, string | undefined>[], e
 
     generateStructForFlextree(hierarchy, reactFlownodes)
 
-    const { map, maxBottom, maxLeft, maxRight, maxTop, nodes, rels } = layoutFromMap(rootId, hierarchy, defaultSettings);
+    const { maxBottom, maxLeft, maxRight, maxTop, nodes } = layoutFromMap(rootId, hierarchy, defaultSettings);
     nodes.forEach((node) => {
         const reactFlowNode = reactFlownodes.find((value) => value.data.label === node.name)
         if (reactFlowNode) {
             reactFlowNode.position = { x: node.x, y: node.y }
+            // reactFlowNode.data.label = reactFlowNode.id
+            // console.log(reactFlowNode.id + " --> " + reactFlowNode.position?.x + " " + reactFlowNode.position?.y)
         }
     })
+    // console.log("maxBottom: " + maxBottom)
+    // console.log("maxLeft: " + maxLeft)
+    // console.log("maxRight: " + maxRight)
+    // console.log("maxTop: " + maxTop)
 
     return { lNode: reactFlownodes, lEdge: edges, maxCoordinate: { maxBottom, maxLeft, maxRight, maxTop } };
 }
@@ -89,28 +95,33 @@ export default function EntitreeTree() {
     const nodeTypes = useMemo(() => ({ orderedGroupNode: OrderedGroupNode, singleNode: SingleNode, unorderedGroupNode: UnorderedGroupNode }), []);
 
     return (
-        <div style={{ width: '100wh', height: '100vh', overflowX: 'auto', overscrollBehaviorY: 'none', backgroundColor: 'white' }}>
-        <h1 style={{textAlign: 'center', backgroundColor: 'pink' }}> EntitreeFlex </h1>
-        <ReactFlow
-            nodes={nodes}
-            edges={edges}
-            onNodesChange={onNodesChange}
-            onEdgesChange={onEdgesChange}
-            connectionLineType={ConnectionLineType.SmoothStep}
-            nodeTypes={nodeTypes}
-            panOnDrag={false}
-            panOnScroll={true}
-            // panOnScrollMode={PanOnScrollMode.Vertical}
-            maxZoom={1}
-            minZoom={1}
-            translateExtent={[
-                [maxCoordinate.maxLeft, maxCoordinate.maxTop - 50],
-                [maxCoordinate.maxRight, maxCoordinate.maxBottom + 50],
-            ]}
-        >
-            <MiniMap />
-            <Background variant={BackgroundVariant.Dots} gap={20} size={1} />
-        </ReactFlow>
-    </div>
+        <>
+            {/* <h1 style={{textAlign: 'center', backgroundColor: 'pink' }}> EntitreeFlex </h1> */}
+            <ReactFlow
+                nodes={nodes}
+                edges={edges}
+                onNodesChange={onNodesChange}
+                onEdgesChange={onEdgesChange}
+                connectionLineType={ConnectionLineType.SmoothStep}
+                nodeTypes={nodeTypes}
+
+                zoomOnScroll={false}
+                zoomOnDoubleClick={false}
+                selectNodesOnDrag={false}
+                panOnDrag={false}
+                panOnScroll={true}
+                // panOnScrollMode={PanOnScrollMode.Vertical}
+                // fitView
+                maxZoom={1}
+                minZoom={1}
+                translateExtent={[
+                    [maxCoordinate.maxLeft, maxCoordinate.maxTop],
+                    [maxCoordinate.maxRight, maxCoordinate.maxBottom],
+                ]}
+            >
+                <MiniMap pannable={true} />
+                <Background variant={BackgroundVariant.Dots} gap={20} size={1} />
+            </ReactFlow>
+        </>
     );
 }

@@ -69,8 +69,8 @@ export const mockData: IMockData = {
             id: '5', name: 'Control Flow', next: ['7'], type: GroupType.Unordered, 
             members: [
                 { id: '51', name: 'Conditional', progress: 50, type: MicroNodeType.Micro },
-                // { id: '52', name: 'Loop', progress: 0, type: MicroNodeType.Micro },
-                // { id: '53', name: 'Function 1', progress: 0, type: MicroNodeType.Micro },
+                { id: '52', name: 'Loop', progress: 0, type: MicroNodeType.Micro },
+                { id: '53', name: 'Function', progress: 0, type: MicroNodeType.Micro },
                 // { id: '54', name: 'Loop 1', progress: 0, type: MicroNodeType.Micro },
                 // { id: '55', name: 'Function 2', progress: 0, type: MicroNodeType.Micro },
                 // { id: '56', name: 'Function 3', progress: 0, type: MicroNodeType.Micro },
@@ -116,12 +116,12 @@ export const mockData: IMockData = {
                 { id: '105', name: 'Practice #3', progress: 100, type: MicroNodeType.Practice },
                 { id: '106', name: 'Variable', progress: 80, type: MicroNodeType.Micro },
                 { id: '107', name: 'Expression', progress: 70, type: MicroNodeType.Micro },
-                { id: '108', name: 'Practice #1', progress: 100, type: MicroNodeType.Practice },
-                { id: '109', name: 'Practice #2', progress: 100, type: MicroNodeType.Practice },
-                { id: '1010', name: 'Practice #3', progress: 100, type: MicroNodeType.Practice },
-                { id: '1011', name: 'Practice #1', progress: 100, type: MicroNodeType.Practice },
-                { id: '1012', name: 'Practice #2', progress: 100, type: MicroNodeType.Practice },
-                { id: '1013', name: 'Practice #3', progress: 100, type: MicroNodeType.Practice }
+                { id: '108', name: 'Practice #11', progress: 100, type: MicroNodeType.Practice },
+                { id: '109', name: 'Practice #21', progress: 100, type: MicroNodeType.Practice },
+                { id: '1010', name: 'Practice #31', progress: 100, type: MicroNodeType.Practice },
+                { id: '1011', name: 'Practice #12', progress: 100, type: MicroNodeType.Practice },
+                { id: '1012', name: 'Practice #22', progress: 100, type: MicroNodeType.Practice },
+                { id: '1013', name: 'Practice Finalll', progress: 100, type: MicroNodeType.Practice }
             ]
         },
     ]
