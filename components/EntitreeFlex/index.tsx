@@ -3,13 +3,13 @@ import { useMemo } from "react";
 import ReactFlow, { useNodesState, useEdgesState, ConnectionLineType, Node, Edge, Background, MiniMap, BackgroundVariant, PanOnScrollMode } from "reactflow";
 import { layoutFromMap } from "entitree-flex";
 import { getInitialNodesAndEdges, groupMember, parents } from './node-edges';
-import { findTopologicalSortDFS } from "./algorithm";
 import { gapBetweenNodeInHorizontal, gapBetweenNodeInVertical, nodeHeight, nodeWidth } from "./constant";
 import { GroupType } from "./data";
 import { defaultSettings } from "./setting";
 import OrderedGroupNode from "./CustomNode/OrderedGroupNode";
 import SingleNode from "./CustomNode/SingleNode";
 import UnorderedGroupNode from "./CustomNode/UnorderedGroupNode";
+import { findRoot } from "./algorithm";
 
 interface TreeNode {
     name: string;
@@ -66,9 +66,8 @@ function generateStructForFlextree(hierarchy: NodeData, nodes: Node<any, string 
 
 function calculateLayoutNodes(reactFlownodes: Node<any, string | undefined>[], edges: Edge<any>[]) {
     let hierarchy: NodeData = {} as NodeData;
-    const tOrder: string[] = findTopologicalSortDFS() // To get the topological order of the nodes
+    const rootId: string = findRoot()
 
-    const rootId = tOrder[0]; // Assume: there is only one root
     generateStructForFlextree(hierarchy, reactFlownodes)
 
     const { map, maxBottom, maxLeft, maxRight, maxTop, nodes, rels } = layoutFromMap(rootId, hierarchy, defaultSettings);
@@ -101,7 +100,7 @@ export default function EntitreeTree() {
             nodeTypes={nodeTypes}
             panOnDrag={false}
             panOnScroll={true}
-            panOnScrollMode={PanOnScrollMode.Vertical}
+            // panOnScrollMode={PanOnScrollMode.Vertical}
             maxZoom={1}
             minZoom={1}
             translateExtent={[
