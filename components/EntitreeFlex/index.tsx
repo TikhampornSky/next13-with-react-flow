@@ -3,7 +3,6 @@ import { useMemo } from "react";
 import ReactFlow, { useNodesState, useEdgesState, ConnectionLineType, Node, Edge, Background, MiniMap, BackgroundVariant, PanOnScrollMode } from "reactflow";
 import { layoutFromMap } from "entitree-flex";
 import { getInitialNodesAndEdges, groupMember, parents } from './node-edges';
-import { nodeHeight, nodeWidth } from "./constant";
 import { GroupType } from "./data";
 import { defaultSettings } from "./setting";
 import OrderedGroupNode from "./CustomNode/OrderedGroupNode";
@@ -25,6 +24,8 @@ interface NodeData {
 }
 
 function calculateNodeSize(nodeId: string): [number, number] {
+    let nodeWidth = defaultSettings.nodeWidth;
+    let nodeHeight = defaultSettings.nodeHeight;
     const nodeInfo = groupMember.get(nodeId)
     if (!nodeInfo) {
         return [nodeWidth, nodeHeight]
