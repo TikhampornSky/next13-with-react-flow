@@ -2,7 +2,7 @@ import { Settings } from "entitree-flex/dist/Settings";
 export const defaultSettings: Settings = {
     clone: false,
     enableFlex: true,
-    firstDegreeSpacing: 50, // spacing in px between nodes belonging to the same source, eg children with same parent
+    firstDegreeSpacing: 0, // spacing in px between nodes belonging to the same source, eg children with same parent
     nextAfterAccessor: "spouses",
     nextAfterSpacing: 0,
     nextBeforeAccessor: "siblings",
@@ -12,10 +12,13 @@ export const defaultSettings: Settings = {
     orientation: "vertical",
     rootX: 0,
     rootY: 0,
-    secondDegreeSpacing: 50, // spacing in px between nodes not belonging to same parent eg "cousin" nodes
+    secondDegreeSpacing: 0, // spacing in px between nodes not belonging to same parent eg "cousin" nodes
     sourcesAccessor: "parents",
-    sourceTargetSpacing: 100, // the "vertical" spacing between nodes in vertical orientation, horizontal otherwise
+    sourceTargetSpacing: 50, // the "vertical" spacing between nodes in vertical orientation, horizontal otherwise
     targetsAccessor: "children",
     groupTargetsByNextAfters: false,
     idAccessor: ""
 };
+
+export const horizontalMargin = 5;
+export const verticalMargin = 5;

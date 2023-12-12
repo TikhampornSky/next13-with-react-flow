@@ -4,7 +4,7 @@ import ReactFlow, { useNodesState, useEdgesState, ConnectionLineType, Node, Edge
 import { layoutFromMap } from "entitree-flex";
 import { getInitialNodesAndEdges, groupMember, parents } from './node-edges';
 import { GroupType } from "./data";
-import { defaultSettings } from "./setting";
+import { defaultSettings, horizontalMargin, verticalMargin } from "./setting";
 import OrderedGroupNode from "./CustomNode/OrderedGroupNode";
 import SingleNode from "./CustomNode/SingleNode";
 import UnorderedGroupNode from "./CustomNode/UnorderedGroupNode";
@@ -33,11 +33,11 @@ function calculateNodeSize(nodeId: string): [number, number] {
     let memberCount = nodeInfo.members.length;
     let w, h;
     if (nodeInfo.type === GroupType.Unordered) {
-        w = nodeWidth * memberCount;
+        w = (nodeWidth * memberCount) + (horizontalMargin * (memberCount - 1));
         h = nodeHeight;
     } else if (nodeInfo.type === GroupType.Ordered) {
         w = nodeWidth;
-        h = nodeHeight * memberCount;
+        h = (nodeHeight * memberCount) + (verticalMargin * (memberCount - 1));
     } else {
         w = nodeWidth;
         h = nodeHeight;
@@ -71,19 +71,26 @@ function calculateLayoutNodes(reactFlownodes: Node<any, string | undefined>[], e
 
     generateStructForFlextree(hierarchy, reactFlownodes)
 
-    const { maxBottom, maxLeft, maxRight, maxTop, nodes } = layoutFromMap(rootId, hierarchy, defaultSettings);
+    let { maxBottom, maxLeft, maxRight, maxTop, nodes } = layoutFromMap(rootId, hierarchy, defaultSettings);
     nodes.forEach((node) => {
         const reactFlowNode = reactFlownodes.find((value) => value.data.label === node.name)
         if (reactFlowNode) {
+            reactFlowNode.data.label = reactFlowNode.id
+
+            // Adjust the position of the node from left-center to center-center
+            let sizee = calculateNodeSize(reactFlowNode.id)
+            // reactFlowNode.position.x = reactFlowNode.position.x - (sizee[0] / 2)
+
+            // reactFlowNode.position = { x: node.x + (sizee[0] / 2), y: node.y }
             reactFlowNode.position = { x: node.x, y: node.y }
-            // reactFlowNode.data.label = reactFlowNode.id
-            // console.log(reactFlowNode.id + " --> " + reactFlowNode.position?.x + " " + reactFlowNode.position?.y)
+
+            console.log(reactFlowNode.id + " --> " + reactFlowNode.position.x + " " + reactFlowNode.position.y)
         }
     })
-    // console.log("maxBottom: " + maxBottom)
-    // console.log("maxLeft: " + maxLeft)
-    // console.log("maxRight: " + maxRight)
-    // console.log("maxTop: " + maxTop)
+    console.log("maxBottom: " + maxBottom)
+    console.log("maxLeft: " + maxLeft)
+    console.log("maxRight: " + maxRight)
+    console.log("maxTop: " + maxTop)
 
     return { lNode: reactFlownodes, lEdge: edges, maxCoordinate: { maxBottom, maxLeft, maxRight, maxTop } };
 }

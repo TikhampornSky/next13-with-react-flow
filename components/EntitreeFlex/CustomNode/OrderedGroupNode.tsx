@@ -10,8 +10,8 @@ export default function OrderedGroupNode({ id, data, isConnectable }: { id: stri
             <p style={{ backgroundColor: 'transparent', textAlign: 'left', position: 'absolute', top: '-20px' }}> {data.label} </p>
             <Handle type="target" position={Position.Top} isConnectable={isConnectable} />
             <div style={{backgroundColor: 'red'}}>
-                {member.map((value) => {
-                    return <div style={{ backgroundColor: '#ffe5d1', width: `${defaultSettings.nodeWidth}px`, height: `${defaultSettings.nodeHeight}px` }} key={value.id}> {value.name}</div>
+                {member.map((value, index) => {
+                    return <div style={{ backgroundColor: '#ffe5d1', marginBottom: `${index !== member.length - 1 ? '5px' : ''}`, width: `${defaultSettings.nodeWidth}px`, height: `${defaultSettings.nodeHeight}px` }} key={value.id}> {value.name}</div>
                 })}
             </div>
             <Handle type="source" position={Position.Bottom} id="b" isConnectable={isConnectable} />
