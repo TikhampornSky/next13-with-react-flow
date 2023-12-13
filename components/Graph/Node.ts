@@ -128,15 +128,15 @@ const Nodes: Node[] = [
         position: { x: 186, y: 36 },
         style: {
             width: 172,
-            height: 108,
+            height: 1008,
         },
     },
     {
         id: '4',
         data: null,
-        position: { x: 186, y: 216 },
+        position: { x: -574, y: 1100 },
         style: {
-            width: 172,
+            width: 1506,
             height: 72,
         },
     },

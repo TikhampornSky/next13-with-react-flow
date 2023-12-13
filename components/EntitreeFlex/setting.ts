@@ -22,3 +22,5 @@ export const defaultSettings: Settings = {
 
 export const horizontalMargin = 5;
 export const verticalMargin = 5;
+
+export const minimapWidth = 200;

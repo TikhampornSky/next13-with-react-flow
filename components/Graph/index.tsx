@@ -2,18 +2,19 @@
 
 import { useCallback, useState } from "react";
 import ReactFlow, {
-    addEdge,
-    Background,
-    Edge,
-    Connection,
-    useNodesState,
-    useEdgesState,
-    Controls,
-    MiniMap,
-    Panel,
-    Node,
-    NodeSelectionChange,
-    EdgeSelectionChange
+  addEdge,
+  Background,
+  Edge,
+  Connection,
+  useNodesState,
+  useEdgesState,
+  Controls,
+  MiniMap,
+  Panel,
+  Node,
+  NodeSelectionChange,
+  EdgeSelectionChange,
+  PanOnScrollMode
 } from "reactflow";
 import 'reactflow/dist/style.css';
 import CustomNode from "./CustomNode";
@@ -22,12 +23,12 @@ import Edges from "./Edge";
 import { DialogProps, FlowProps, MockDetailInterface } from "@/types";
 import CustomizedDialogs from "./NodeDialog";
 import { fetchMockDataDetailsById } from "@/backend";
-  
+
 const nodeTypes = {
   custom: CustomNode
 };
 
-const BasicFlow = ({data}: FlowProps) => {
+const BasicFlow = ({ data }: FlowProps) => {
   const [nodes, , onNodesChange] = useNodesState(data);
   const [edges, setEdges, onEdgesChange] = useEdgesState(Edges);
   const onConnect = useCallback(
@@ -36,9 +37,9 @@ const BasicFlow = ({data}: FlowProps) => {
   );
 
   const onNodeMouseEnterAndLeave = (event: React.MouseEvent, node: Node) => {
-    let ns:NodeSelectionChange[] = []
-    let es:EdgeSelectionChange[] = []
-    
+    let ns: NodeSelectionChange[] = []
+    let es: EdgeSelectionChange[] = []
+
     nodes.map((nodee) => {
       if (nodee.id === node.id) {
         if (event.type === 'mouseenter') {
@@ -99,29 +100,44 @@ const BasicFlow = ({data}: FlowProps) => {
   }
 
   return (
-      <div style={{ width: '100vw', height: '100vh' }}>
-            <ReactFlow
-              nodes={nodes}
-              edges={edges}
-              onNodesChange={onNodesChange}
-              onEdgesChange={onEdgesChange}
-              onConnect={onConnect}
-              onNodeMouseEnter={onNodeMouseEnterAndLeave}
-              onNodeMouseLeave={onNodeMouseEnterAndLeave}
-              onNodeClick={onNodeClick}
-              nodeTypes={nodeTypes}
-              fitView
-              attributionPosition="top-right"
-          >
-            <Panel position="top-left">
-              <NavBar />
-            </Panel>
-            <Controls />
-            <MiniMap />
-            <Background gap={20} size={1} />
-          </ReactFlow>
-          <CustomizedDialogs open={open} setOpen={setOpen} title={title} detail={detail} setTitle={setTitle} setDetail={setDetail}/>
-      </div>
+    <div style={{ width: '100vw', height: '100vh' }}>
+      <ReactFlow
+        nodes={nodes}
+        edges={edges}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
+        onConnect={onConnect}
+        onNodeMouseEnter={onNodeMouseEnterAndLeave}
+        onNodeMouseLeave={onNodeMouseEnterAndLeave}
+        onNodeClick={onNodeClick}
+        nodeTypes={nodeTypes}
+        // fitView
+        attributionPosition="top-right"
+
+        zoomOnScroll={false}
+        zoomOnDoubleClick={false}
+        selectNodesOnDrag={false}
+        panOnDrag={false}
+        panOnScroll={true}
+
+        panOnScrollMode={PanOnScrollMode.Free}
+        // fitView
+        maxZoom={1}
+        minZoom={1}
+        translateExtent={[
+          [-574, 0],
+          [932, 2000],
+        ]}
+      >
+        <Panel position="top-left">
+          <NavBar />
+        </Panel>
+        <Controls />
+        <MiniMap />
+        <Background gap={20} size={1} />
+      </ReactFlow>
+      <CustomizedDialogs open={open} setOpen={setOpen} title={title} detail={detail} setTitle={setTitle} setDetail={setDetail} />
+    </div>
   );
 };
 

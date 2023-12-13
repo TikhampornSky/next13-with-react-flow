@@ -7,7 +7,7 @@ export default function Explore() {
     return (
         <Item>
             <div style={{ width: '100vw', height: '5vh', backgroundColor: 'blue' }}>
-                <h1 style={{ textAlign: 'center', backgroundColor: 'pink' }}> a </h1>
+                <h1 style={{ textAlign: 'center', backgroundColor: 'pink' }}> 123456789 </h1>
             </div>
             <div style={{ width: '100vw', height: '95vh' }}>
                 <EntitreeTree />

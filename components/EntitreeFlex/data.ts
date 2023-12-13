@@ -82,15 +82,15 @@ export const mockData: IMockData = {
                 { id: '51', name: 'Conditional', progress: 50, type: MicroNodeType.Micro },
                 { id: '52', name: 'Loop', progress: 0, type: MicroNodeType.Micro },
                 { id: '53', name: 'Function', progress: 0, type: MicroNodeType.Micro },
-                // { id: '54', name: 'Loop 1', progress: 0, type: MicroNodeType.Micro },
-                // { id: '55', name: 'Function 2', progress: 0, type: MicroNodeType.Micro },
-                // { id: '56', name: 'Function 3', progress: 0, type: MicroNodeType.Micro },
-                // { id: '57', name: 'Loop 2', progress: 0, type: MicroNodeType.Micro },
+                { id: '54', name: 'Loop 1', progress: 0, type: MicroNodeType.Micro },
+                { id: '55', name: 'Function 2', progress: 0, type: MicroNodeType.Micro },
+                { id: '56', name: 'Function 3', progress: 0, type: MicroNodeType.Micro },
+                { id: '57', name: 'Loop 2', progress: 0, type: MicroNodeType.Micro },
                 // { id: '58', name: 'Function 4', progress: 0, type: MicroNodeType.Micro },
             ]
         },
         {
-            id: '6', name: 'Useful Library', next: [], type: GroupType.Unordered, 
+            id: '6', name: 'Useful Library', next: [], type: GroupType.Ordered, 
             members: [
                 { id: '61', name: 'Built-in function', progress: 0, type: MicroNodeType.Micro },
                 { id: '62', name: 'Standard library', progress: 0, type: MicroNodeType.Micro },

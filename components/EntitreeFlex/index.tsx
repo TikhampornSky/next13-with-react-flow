@@ -1,10 +1,10 @@
 "use client"
 import { useMemo } from "react";
-import ReactFlow, { useNodesState, useEdgesState, ConnectionLineType, Node, Edge, Background, MiniMap, BackgroundVariant, PanOnScrollMode } from "reactflow";
+import ReactFlow, { useNodesState, useEdgesState, ConnectionLineType, Node, Edge, Background, MiniMap, BackgroundVariant, PanOnScrollMode, Controls } from "reactflow";
 import { layoutFromMap } from "entitree-flex";
 import { getInitialNodesAndEdges, groupMember, parents } from './node-edges';
 import { GroupType } from "./data";
-import { defaultSettings, horizontalMargin, verticalMargin } from "./setting";
+import { defaultSettings, horizontalMargin, verticalMargin, minimapWidth } from "./setting";
 import OrderedGroupNode from "./CustomNode/OrderedGroupNode";
 import SingleNode from "./CustomNode/SingleNode";
 import UnorderedGroupNode from "./CustomNode/UnorderedGroupNode";
@@ -75,16 +75,10 @@ function calculateLayoutNodes(reactFlownodes: Node<any, string | undefined>[], e
     nodes.forEach((node) => {
         const reactFlowNode = reactFlownodes.find((value) => value.data.label === node.name)
         if (reactFlowNode) {
-            reactFlowNode.data.label = reactFlowNode.id
+            reactFlowNode.data.label = reactFlowNode.id  // TEST ONLY
 
-            // Adjust the position of the node from left-center to center-center
-            let sizee = calculateNodeSize(reactFlowNode.id)
-            // reactFlowNode.position.x = reactFlowNode.position.x - (sizee[0] / 2)
-
-            // reactFlowNode.position = { x: node.x + (sizee[0] / 2), y: node.y }
             reactFlowNode.position = { x: node.x, y: node.y }
-
-            console.log(reactFlowNode.id + " --> " + reactFlowNode.position.x + " " + reactFlowNode.position.y)
+            console.log(reactFlowNode.id + " --> " + JSON.stringify(reactFlowNode.position))
         }
     })
 
@@ -97,9 +91,8 @@ export default function EntitreeTree() {
     const [nodes, setNodes, onNodesChange] = useNodesState(lNode);
     const [edges, setEdges, onEdgesChange] = useEdgesState(lEdge);
     const nodeTypes = useMemo(() => ({ orderedGroupNode: OrderedGroupNode, singleNode: SingleNode, unorderedGroupNode: UnorderedGroupNode }), []);
-
-    // console.log("maxCoordinate: " + JSON.stringify(maxCoordinate))
-    // console.log("nodes: " + JSON.stringify(nodes))
+    
+    console.log("maxCoordinate: " + JSON.stringify(maxCoordinate))
     return (
         <>
             {/* <h1 style={{textAlign: 'center', backgroundColor: 'pink' }}> EntitreeFlex </h1> */}
@@ -116,19 +109,17 @@ export default function EntitreeTree() {
                 selectNodesOnDrag={false}
                 panOnDrag={false}
                 panOnScroll={true}
-                // panOnScrollMode={PanOnScrollMode.Vertical}
+
+                panOnScrollMode={PanOnScrollMode.Free}
                 // fitView
                 maxZoom={1}
                 minZoom={1}
                 translateExtent={[
-                    [maxCoordinate.maxLeft, maxCoordinate.maxTop],
+                    [maxCoordinate.maxLeft - 100, maxCoordinate.maxTop],
                     [maxCoordinate.maxRight, maxCoordinate.maxBottom],
                 ]}
-                // translateExtent={[
-                //     [maxCoordinate.maxTop, maxCoordinate.maxLeft],
-                //     [maxCoordinate.maxBottom, maxCoordinate.maxRight],
-                // ]}
-                // defaultViewport={{x: maxCoordinate.maxRight, y: maxCoordinate.maxTop, zoom: 1}}
+                onlyRenderVisibleElements={true}
+                // defaultViewport={{ x: 630, y: 0, zoom: 1 }}
             >
                 <MiniMap pannable={true} />
                 <Background variant={BackgroundVariant.Dots} gap={20} size={1} />
