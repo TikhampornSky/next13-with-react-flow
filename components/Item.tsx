@@ -1,12 +1,23 @@
-"use client";
-import { styled, Paper } from "@mui/material";
-
-const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-    ...theme.typography.body2,
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-    width: '100vw',
-}));
+const Item = ({
+    children,
+}: {
+    children: React.ReactNode
+}) => {
+    return (
+        <div
+            style={{
+                // width: '100vw',
+                // height: '100vh',
+                // display: 'flex',
+                // flexDirection: 'column',
+                // justifyContent: 'center',
+                // alignItems: 'center',
+                backgroundColor: 'white'
+            }}
+        >
+            {children}
+        </div>
+    )
+}
 
 export default Item;

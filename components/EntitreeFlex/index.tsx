@@ -87,10 +87,6 @@ function calculateLayoutNodes(reactFlownodes: Node<any, string | undefined>[], e
             console.log(reactFlowNode.id + " --> " + reactFlowNode.position.x + " " + reactFlowNode.position.y)
         }
     })
-    console.log("maxBottom: " + maxBottom)
-    console.log("maxLeft: " + maxLeft)
-    console.log("maxRight: " + maxRight)
-    console.log("maxTop: " + maxTop)
 
     return { lNode: reactFlownodes, lEdge: edges, maxCoordinate: { maxBottom, maxLeft, maxRight, maxTop } };
 }
@@ -102,6 +98,8 @@ export default function EntitreeTree() {
     const [edges, setEdges, onEdgesChange] = useEdgesState(lEdge);
     const nodeTypes = useMemo(() => ({ orderedGroupNode: OrderedGroupNode, singleNode: SingleNode, unorderedGroupNode: UnorderedGroupNode }), []);
 
+    // console.log("maxCoordinate: " + JSON.stringify(maxCoordinate))
+    // console.log("nodes: " + JSON.stringify(nodes))
     return (
         <>
             {/* <h1 style={{textAlign: 'center', backgroundColor: 'pink' }}> EntitreeFlex </h1> */}
@@ -126,6 +124,11 @@ export default function EntitreeTree() {
                     [maxCoordinate.maxLeft, maxCoordinate.maxTop],
                     [maxCoordinate.maxRight, maxCoordinate.maxBottom],
                 ]}
+                // translateExtent={[
+                //     [maxCoordinate.maxTop, maxCoordinate.maxLeft],
+                //     [maxCoordinate.maxBottom, maxCoordinate.maxRight],
+                // ]}
+                // defaultViewport={{x: maxCoordinate.maxRight, y: maxCoordinate.maxTop, zoom: 1}}
             >
                 <MiniMap pannable={true} />
                 <Background variant={BackgroundVariant.Dots} gap={20} size={1} />
