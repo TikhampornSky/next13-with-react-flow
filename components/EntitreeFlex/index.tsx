@@ -8,6 +8,7 @@ import { defaultSettings, horizontalMargin, verticalMargin } from "./setting";
 import OrderedGroupNode from "./CustomNode/OrderedGroupNode";
 import SingleNode from "./CustomNode/SingleNode";
 import UnorderedGroupNode from "./CustomNode/UnorderedGroupNode";
+import InfoNode from "./CustomNode/InfoNode";
 import { findRoot } from "./algorithm";
 
 interface TreeNode {
@@ -77,13 +78,13 @@ function calculateLayoutNodes(reactFlownodes: Node<any, string | undefined>[], e
     nodes.forEach((node) => {
         const reactFlowNode = reactFlownodes.find((value) => value.data.label === node.name)
         if (reactFlowNode) {
-            // reactFlowNode.data.label = reactFlowNode.id  // TEST ONLY
+            reactFlowNode.data.label = reactFlowNode.id  // TEST ONLY
 
             reactFlowNode.position = {
                 x: node.x,
                 y: node.y
             } 
-            // console.log(reactFlowNode.id + " --> " + JSON.stringify(reactFlowNode.position))
+            console.log(reactFlowNode.id + " --> " + JSON.stringify(reactFlowNode.position))
 
             if (reactFlowNode.id === rootId) {
                 rootWidth = node.width
@@ -92,30 +93,19 @@ function calculateLayoutNodes(reactFlownodes: Node<any, string | undefined>[], e
     })
 
     // add info section
-    reactFlownodes.push({
-        id: 'info',
-        type: 'default',
-        position: {
-            x: - screenWidth/2 + rootWidth/2,
-            y: 0
-        },
-        data: {
-            label: 'info section (mock na)'
-        },
-        draggable: false,
-        selectable: false,
-        style: {
-            width: screenWidth,
-            height: defaultSettings.rootY,
-            backgroundColor: 'white',
-            border: '1px solid #777',
-            borderRadius: '5px',
-            textAlign: 'center',
-            fontSize: '12px',
-            color: '#777',
-            padding: '5px'
-        }
-    })
+    // reactFlownodes.push({
+    //     id: 'info',
+    //     type: 'infoNode',
+    //     position: {
+    //         x: - screenWidth/2 + rootWidth/2,
+    //         y: 0
+    //     },
+    //     data: {
+    //         label: 'info section (mock na)'
+    //     },
+    //     draggable: false,
+    //     selectable: false,
+    // })
 
     return { lNode: reactFlownodes, lEdge: edges, rootInfo: { width: rootWidth } };
 }
@@ -173,7 +163,10 @@ export default function EntitreeTree({ screenWidth, setScreenWidth }: EntitreeTr
 
     const [nodes, setNodes, onNodesChange] = useNodesState(layoutData.lNode);
     const [edges, setEdges, onEdgesChange] = useEdgesState(layoutData.lEdge);
-    const nodeTypes = useMemo(() => ({ orderedGroupNode: OrderedGroupNode, singleNode: SingleNode, unorderedGroupNode: UnorderedGroupNode }), []);
+    const nodeTypes = useMemo(() => ({ orderedGroupNode: OrderedGroupNode, singleNode: SingleNode, 
+        unorderedGroupNode: UnorderedGroupNode, infoNode: InfoNode }), []);
+
+    console.log("LayoutData: " + JSON.stringify(layoutData.bounds))
 
     return (
         <>
