@@ -1,6 +1,6 @@
 "use client"
-import { useMemo } from "react";
-import ReactFlow, { useNodesState, useEdgesState, ConnectionLineType, Node, Edge, Background, MiniMap, BackgroundVariant, PanOnScrollMode, getNodesBounds, useReactFlow } from "reactflow";
+import { useMemo, useEffect, useState, Dispatch, SetStateAction } from "react";
+import ReactFlow, { useNodesState, useEdgesState, ConnectionLineType, Node, Edge, Background, MiniMap, BackgroundVariant, PanOnScrollMode, getNodesBounds, useReactFlow, Rect } from "reactflow";
 import { layoutFromMap } from "entitree-flex";
 import { getInitialNodesAndEdges, groupMember, parents } from './node-edges';
 import { GroupType } from "./data";
@@ -94,7 +94,7 @@ function calculateLayoutNodes(reactFlownodes: Node<any, string | undefined>[], e
     // add info section
     reactFlownodes.push({
         id: 'info',
-        type: 'special',
+        type: 'default',
         position: {
             x: - screenWidth/2 + rootWidth/2,
             y: 0
@@ -122,18 +122,58 @@ function calculateLayoutNodes(reactFlownodes: Node<any, string | undefined>[], e
 
 interface EntitreeTreeProps {
     screenWidth: number;
+    setScreenWidth: Dispatch<SetStateAction<number | null>>
 }
 
-export default function EntitreeTree({ screenWidth }: EntitreeTreeProps) {
+export default function EntitreeTree({ screenWidth, setScreenWidth }: EntitreeTreeProps) {
     const { initialNodes, initialEdges } = getInitialNodesAndEdges();
-    let { lNode, lEdge, rootInfo } = calculateLayoutNodes(initialNodes, initialEdges, screenWidth);
-    const [nodes, setNodes, onNodesChange] = useNodesState(lNode);
-    const [edges, setEdges, onEdgesChange] = useEdgesState(lEdge);
-    const nodeTypes = useMemo(() => ({ orderedGroupNode: OrderedGroupNode, singleNode: SingleNode, unorderedGroupNode: UnorderedGroupNode }), []);
-
-    const bounds = getNodesBounds(nodes);
-
     const { setViewport } = useReactFlow();
+    const [layoutData, setLayoutData] = useState<{
+        lNode: Node<any, string | undefined>[];
+        lEdge: Edge<any>[];
+        rootInfo: {
+            width: number;
+        };
+        bounds: Rect
+    
+    }>({
+        lNode: initialNodes,
+        lEdge: initialEdges,
+        rootInfo: {
+            width: defaultSettings.nodeWidth
+        },
+        bounds: {
+            x: 0,
+            y: 0,
+            width: 0,
+            height: 0
+        }
+    });
+    const handleResize = () => {
+        setScreenWidth(window.innerWidth);
+    };
+    useEffect(() => {
+        window.addEventListener('resize', handleResize);
+    
+        const { lNode, lEdge, rootInfo } = calculateLayoutNodes(initialNodes, initialEdges, screenWidth);
+        const bounds = getNodesBounds(nodes);
+
+        setLayoutData({ lNode, lEdge, rootInfo, bounds });
+        setViewport({
+            x: defaultSettings.rootX + ( screenWidth === null ? 0 : screenWidth / 2) - ( layoutData.rootInfo.width / 2),
+            y: 0,
+            zoom: 1
+        });
+    
+        return () => {
+          window.removeEventListener('resize', handleResize);
+        };
+
+    }, [screenWidth]);
+
+    const [nodes, setNodes, onNodesChange] = useNodesState(layoutData.lNode);
+    const [edges, setEdges, onEdgesChange] = useEdgesState(layoutData.lEdge);
+    const nodeTypes = useMemo(() => ({ orderedGroupNode: OrderedGroupNode, singleNode: SingleNode, unorderedGroupNode: UnorderedGroupNode }), []);
 
     return (
         <>
@@ -157,14 +197,14 @@ export default function EntitreeTree({ screenWidth }: EntitreeTreeProps) {
                 maxZoom={1}
                 minZoom={1}
                 translateExtent={[
-                    [bounds.x, bounds.y],
-                    [bounds.x + bounds.width, bounds.y + bounds.height]
+                    [layoutData.bounds.x, layoutData.bounds.y],
+                    [layoutData.bounds.x + layoutData.bounds.width, layoutData.bounds.y + layoutData.bounds.height]
                 ]}
                 // onlyRenderVisibleElements={true}
 
                 onInit={() => {
                     setViewport({
-                      x: defaultSettings.rootX + ( screenWidth === null ? 0 : screenWidth / 2) - ( rootInfo.width / 2),
+                      x: defaultSettings.rootX + ( screenWidth === null ? 0 : screenWidth / 2) - ( layoutData.rootInfo.width / 2),
                       y: 0,
                       zoom: 1
                     });
