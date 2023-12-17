@@ -1,10 +1,10 @@
 "use client"
-import { useMemo } from "react";
-import ReactFlow, { useNodesState, useEdgesState, ConnectionLineType, Node, Edge, Background, MiniMap, BackgroundVariant, PanOnScrollMode, Controls } from "reactflow";
+import { useEffect, useMemo, useState } from "react";
+import ReactFlow, { useNodesState, useEdgesState, ConnectionLineType, Node, Edge, Background, MiniMap, BackgroundVariant, PanOnScrollMode, getViewportForBounds, getNodesBounds, useReactFlow } from "reactflow";
 import { layoutFromMap } from "entitree-flex";
 import { getInitialNodesAndEdges, groupMember, parents } from './node-edges';
 import { GroupType } from "./data";
-import { defaultSettings, horizontalMargin, verticalMargin, minimapWidth } from "./setting";
+import { defaultSettings, horizontalMargin, verticalMargin } from "./setting";
 import OrderedGroupNode from "./CustomNode/OrderedGroupNode";
 import SingleNode from "./CustomNode/SingleNode";
 import UnorderedGroupNode from "./CustomNode/UnorderedGroupNode";
@@ -62,6 +62,7 @@ function generateStructForFlextree(hierarchy: NodeData, nodes: Node<any, string 
             spouses: [],
             parents: myParents,
         }
+
     })
 }
 
@@ -71,31 +72,59 @@ function calculateLayoutNodes(reactFlownodes: Node<any, string | undefined>[], e
 
     generateStructForFlextree(hierarchy, reactFlownodes)
 
-    let { maxBottom, maxLeft, maxRight, maxTop, nodes } = layoutFromMap(rootId, hierarchy, defaultSettings);
+    let { nodes } = layoutFromMap(rootId, hierarchy, defaultSettings);
+    let rootX = 0;
+    let rootY = 0;
     nodes.forEach((node) => {
         const reactFlowNode = reactFlownodes.find((value) => value.data.label === node.name)
         if (reactFlowNode) {
-            reactFlowNode.data.label = reactFlowNode.id  // TEST ONLY
+            // reactFlowNode.data.label = reactFlowNode.id  // TEST ONLY
 
-            reactFlowNode.position = { x: node.x, y: node.y }
-            console.log(reactFlowNode.id + " --> " + JSON.stringify(reactFlowNode.position))
+            reactFlowNode.position = {
+                x: node.x,
+                y: node.y
+            } 
+            // console.log(reactFlowNode.id + " --> " + JSON.stringify(reactFlowNode.position))
+
+            if (reactFlowNode.id === rootId) {
+                rootX = node.x
+                rootY = node.y
+            }
         }
     })
 
-    return { lNode: reactFlownodes, lEdge: edges, maxCoordinate: { maxBottom, maxLeft, maxRight, maxTop } };
+    return { lNode: reactFlownodes, lEdge: edges, rootPosition: { x: rootX, y: rootY } };
 }
 
 export default function EntitreeTree() {
     const { initialNodes, initialEdges } = getInitialNodesAndEdges();
-    let { lNode, lEdge, maxCoordinate } = calculateLayoutNodes(initialNodes, initialEdges);
+    let { lNode, lEdge, rootPosition } = calculateLayoutNodes(initialNodes, initialEdges);
     const [nodes, setNodes, onNodesChange] = useNodesState(lNode);
     const [edges, setEdges, onEdgesChange] = useEdgesState(lEdge);
     const nodeTypes = useMemo(() => ({ orderedGroupNode: OrderedGroupNode, singleNode: SingleNode, unorderedGroupNode: UnorderedGroupNode }), []);
-    
-    console.log("maxCoordinate: " + JSON.stringify(maxCoordinate))
+
+    const bounds = getNodesBounds(nodes);
+
+    const { setViewport } = useReactFlow();
+
+    const [screenWidth, setScreenWidth] = useState<number | null>(null);
+    useEffect(() => {
+        const updateScreenWidth = () => {
+            setScreenWidth(window.innerWidth);
+        };
+
+        updateScreenWidth();
+
+        window.addEventListener('resize', updateScreenWidth);
+
+        return () => {
+            window.removeEventListener('resize', updateScreenWidth);
+        };
+    }, []);
+
     return (
         <>
-            {/* <h1 style={{textAlign: 'center', backgroundColor: 'pink' }}> EntitreeFlex </h1> */}
+            {screenWidth !== null && 
             <ReactFlow
                 nodes={nodes}
                 edges={edges}
@@ -112,18 +141,27 @@ export default function EntitreeTree() {
 
                 panOnScrollMode={PanOnScrollMode.Free}
                 // fitView
+                // fitViewOptions={{ nodes: nodes }}
                 maxZoom={1}
                 minZoom={1}
                 translateExtent={[
-                    [maxCoordinate.maxLeft - 100, maxCoordinate.maxTop],
-                    [maxCoordinate.maxRight, maxCoordinate.maxBottom],
+                    [bounds.x, bounds.y],
+                    [bounds.x + bounds.width, bounds.y + bounds.height]
                 ]}
-                onlyRenderVisibleElements={true}
-                // defaultViewport={{ x: 630, y: 0, zoom: 1 }}
+                // onlyRenderVisibleElements={true}
+                // defaultViewport={{ x: (bounds.x + bounds.width)/2, y: 0, zoom: 1 }}
+                onInit={() => {
+                    setViewport({
+                      x: rootPosition.x + ( screenWidth === null ? 0 : screenWidth / 2) - ( defaultSettings.nodeWidth / 2),
+                      y: 0,
+                      zoom: 1
+                    });
+                }}
             >
                 <MiniMap pannable={true} />
                 <Background variant={BackgroundVariant.Dots} gap={20} size={1} />
-            </ReactFlow>
+            </ReactFlow> }
+            {screenWidth === null && <p>Loading...</p>}
         </>
     );
 }
