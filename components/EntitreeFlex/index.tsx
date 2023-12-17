@@ -74,7 +74,7 @@ function calculateLayoutNodes(reactFlownodes: Node<any, string | undefined>[], e
 
     let { nodes } = layoutFromMap(rootId, hierarchy, defaultSettings);
     let rootX = 0;
-    let rootY = 0;
+    let rootWidth = 0;
     nodes.forEach((node) => {
         const reactFlowNode = reactFlownodes.find((value) => value.data.label === node.name)
         if (reactFlowNode) {
@@ -88,17 +88,17 @@ function calculateLayoutNodes(reactFlownodes: Node<any, string | undefined>[], e
 
             if (reactFlowNode.id === rootId) {
                 rootX = node.x
-                rootY = node.y
+                rootWidth = node.width
             }
         }
     })
 
-    return { lNode: reactFlownodes, lEdge: edges, rootPosition: { x: rootX, y: rootY } };
+    return { lNode: reactFlownodes, lEdge: edges, rootInfo: { x: rootX, width: rootWidth } };
 }
 
 export default function EntitreeTree() {
     const { initialNodes, initialEdges } = getInitialNodesAndEdges();
-    let { lNode, lEdge, rootPosition } = calculateLayoutNodes(initialNodes, initialEdges);
+    let { lNode, lEdge, rootInfo } = calculateLayoutNodes(initialNodes, initialEdges);
     const [nodes, setNodes, onNodesChange] = useNodesState(lNode);
     const [edges, setEdges, onEdgesChange] = useEdgesState(lEdge);
     const nodeTypes = useMemo(() => ({ orderedGroupNode: OrderedGroupNode, singleNode: SingleNode, unorderedGroupNode: UnorderedGroupNode }), []);
@@ -152,7 +152,7 @@ export default function EntitreeTree() {
                 // defaultViewport={{ x: (bounds.x + bounds.width)/2, y: 0, zoom: 1 }}
                 onInit={() => {
                     setViewport({
-                      x: rootPosition.x + ( screenWidth === null ? 0 : screenWidth / 2) - ( defaultSettings.nodeWidth / 2),
+                      x: rootInfo.x + ( screenWidth === null ? 0 : screenWidth / 2) - ( rootInfo.width / 2),
                       y: 0,
                       zoom: 1
                     });
