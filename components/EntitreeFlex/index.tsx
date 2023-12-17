@@ -1,5 +1,5 @@
 "use client"
-import { useMemo, useEffect, useState, Dispatch, SetStateAction } from "react";
+import { useMemo, useEffect, Dispatch, SetStateAction } from "react";
 import ReactFlow, { useNodesState, useEdgesState, ConnectionLineType, Node, Edge, Background, MiniMap, BackgroundVariant, PanOnScrollMode, getNodesBounds, useReactFlow, Rect } from "reactflow";
 import { layoutFromMap } from "entitree-flex";
 import { getInitialNodesAndEdges, groupMember, parents } from './node-edges';
@@ -78,13 +78,13 @@ function calculateLayoutNodes(reactFlownodes: Node<any, string | undefined>[], e
     nodes.forEach((node) => {
         const reactFlowNode = reactFlownodes.find((value) => value.data.label === node.name)
         if (reactFlowNode) {
-            reactFlowNode.data.label = reactFlowNode.id  // TEST ONLY
+            // reactFlowNode.data.label = reactFlowNode.id  // TEST ONLY
 
             reactFlowNode.position = {
                 x: node.x,
                 y: node.y
             } 
-            console.log(reactFlowNode.id + " --> " + JSON.stringify(reactFlowNode.position))
+            // console.log(reactFlowNode.id + " --> " + JSON.stringify(reactFlowNode.position))
 
             if (reactFlowNode.id === rootId) {
                 rootWidth = node.width
@@ -92,22 +92,25 @@ function calculateLayoutNodes(reactFlownodes: Node<any, string | undefined>[], e
         }
     })
 
-    // add info section
-    // reactFlownodes.push({
-    //     id: 'info',
-    //     type: 'infoNode',
-    //     position: {
-    //         x: - screenWidth/2 + rootWidth/2,
-    //         y: 0
-    //     },
-    //     data: {
-    //         label: 'info section (mock na)'
-    //     },
-    //     draggable: false,
-    //     selectable: false,
-    // })
+    setInfoSection(reactFlownodes, screenWidth, rootWidth)
 
     return { lNode: reactFlownodes, lEdge: edges, rootInfo: { width: rootWidth } };
+}
+
+function setInfoSection(reactFlownodes: Node<any, string | undefined>[], screenWidth: number, rootWidth: number) {
+    reactFlownodes.push({
+        id: 'info',
+        type: 'infoNode',
+        position: {
+            x: - screenWidth/2 + rootWidth/2,
+            y: 0
+        },
+        data: {
+            label: 'info section (mock na)'
+        },
+        draggable: false,
+        selectable: false,
+    })
 }
 
 interface EntitreeTreeProps {
@@ -118,55 +121,22 @@ interface EntitreeTreeProps {
 export default function EntitreeTree({ screenWidth, setScreenWidth }: EntitreeTreeProps) {
     const { initialNodes, initialEdges } = getInitialNodesAndEdges();
     const { setViewport } = useReactFlow();
-    const [layoutData, setLayoutData] = useState<{
-        lNode: Node<any, string | undefined>[];
-        lEdge: Edge<any>[];
-        rootInfo: {
-            width: number;
-        };
-        bounds: Rect
-    
-    }>({
-        lNode: initialNodes,
-        lEdge: initialEdges,
-        rootInfo: {
-            width: defaultSettings.nodeWidth
-        },
-        bounds: {
-            x: 0,
-            y: 0,
-            width: 0,
-            height: 0
-        }
-    });
-    const handleResize = () => {
-        setScreenWidth(window.innerWidth);
-    };
-    useEffect(() => {
-        window.addEventListener('resize', handleResize);
-    
-        const { lNode, lEdge, rootInfo } = calculateLayoutNodes(initialNodes, initialEdges, screenWidth);
-        const bounds = getNodesBounds(nodes);
-
-        setLayoutData({ lNode, lEdge, rootInfo, bounds });
-        setViewport({
-            x: defaultSettings.rootX + ( screenWidth === null ? 0 : screenWidth / 2) - ( layoutData.rootInfo.width / 2),
-            y: 0,
-            zoom: 1
-        });
-    
-        return () => {
-          window.removeEventListener('resize', handleResize);
-        };
-
-    }, [screenWidth]);
-
-    const [nodes, setNodes, onNodesChange] = useNodesState(layoutData.lNode);
-    const [edges, setEdges, onEdgesChange] = useEdgesState(layoutData.lEdge);
     const nodeTypes = useMemo(() => ({ orderedGroupNode: OrderedGroupNode, singleNode: SingleNode, 
         unorderedGroupNode: UnorderedGroupNode, infoNode: InfoNode }), []);
 
-    console.log("LayoutData: " + JSON.stringify(layoutData.bounds))
+    let { lNode, lEdge, rootInfo } = calculateLayoutNodes(initialNodes, initialEdges, screenWidth);
+    const [nodes, setNodes, onNodesChange] = useNodesState(lNode);
+    const [edges, setEdges, onEdgesChange] = useEdgesState(lEdge);
+    const bounds = getNodesBounds(nodes);
+    
+    useEffect(() => {
+        setViewport({
+            x: defaultSettings.rootX + ( screenWidth === null ? 0 : screenWidth / 2) - ( rootInfo.width / 2),
+            y: 0,
+            zoom: 1
+        });
+        setInfoSection(nodes, screenWidth, rootInfo.width)
+    }, [screenWidth]);
 
     return (
         <>
@@ -190,14 +160,14 @@ export default function EntitreeTree({ screenWidth, setScreenWidth }: EntitreeTr
                 maxZoom={1}
                 minZoom={1}
                 translateExtent={[
-                    [layoutData.bounds.x, layoutData.bounds.y],
-                    [layoutData.bounds.x + layoutData.bounds.width, layoutData.bounds.y + layoutData.bounds.height]
+                    [bounds.x, bounds.y],
+                    [bounds.x + bounds.width, bounds.y + bounds.height]
                 ]}
                 // onlyRenderVisibleElements={true}
 
                 onInit={() => {
                     setViewport({
-                      x: defaultSettings.rootX + ( screenWidth === null ? 0 : screenWidth / 2) - ( layoutData.rootInfo.width / 2),
+                      x: defaultSettings.rootX + ( screenWidth === null ? 0 : screenWidth / 2) - ( rootInfo.width / 2),
                       y: 0,
                       zoom: 1
                     });
