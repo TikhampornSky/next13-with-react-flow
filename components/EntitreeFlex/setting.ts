@@ -11,7 +11,7 @@ export const defaultSettings: Settings = {
     nodeWidth: 172, // default node width in px
     orientation: "vertical",
     rootX: 0,
-    rootY: 0,
+    rootY: 100,
     secondDegreeSpacing: 0, // spacing in px between nodes not belonging to same parent eg "cousin" nodes
     sourcesAccessor: "parents",
     sourceTargetSpacing: 50, // the "vertical" spacing between nodes in vertical orientation, horizontal otherwise

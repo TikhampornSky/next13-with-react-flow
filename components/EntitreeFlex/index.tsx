@@ -1,6 +1,6 @@
 "use client"
-import { useEffect, useMemo, useState } from "react";
-import ReactFlow, { useNodesState, useEdgesState, ConnectionLineType, Node, Edge, Background, MiniMap, BackgroundVariant, PanOnScrollMode, getViewportForBounds, getNodesBounds, useReactFlow } from "reactflow";
+import { useMemo } from "react";
+import ReactFlow, { useNodesState, useEdgesState, ConnectionLineType, Node, Edge, Background, MiniMap, BackgroundVariant, PanOnScrollMode, getNodesBounds, useReactFlow } from "reactflow";
 import { layoutFromMap } from "entitree-flex";
 import { getInitialNodesAndEdges, groupMember, parents } from './node-edges';
 import { GroupType } from "./data";
@@ -66,14 +66,13 @@ function generateStructForFlextree(hierarchy: NodeData, nodes: Node<any, string 
     })
 }
 
-function calculateLayoutNodes(reactFlownodes: Node<any, string | undefined>[], edges: Edge<any>[]) {
+function calculateLayoutNodes(reactFlownodes: Node<any, string | undefined>[], edges: Edge<any>[], screenWidth: number) {
     let hierarchy: NodeData = {} as NodeData;
     const rootId: string = findRoot()
 
     generateStructForFlextree(hierarchy, reactFlownodes)
 
     let { nodes } = layoutFromMap(rootId, hierarchy, defaultSettings);
-    let rootX = 0;
     let rootWidth = 0;
     nodes.forEach((node) => {
         const reactFlowNode = reactFlownodes.find((value) => value.data.label === node.name)
@@ -87,18 +86,47 @@ function calculateLayoutNodes(reactFlownodes: Node<any, string | undefined>[], e
             // console.log(reactFlowNode.id + " --> " + JSON.stringify(reactFlowNode.position))
 
             if (reactFlowNode.id === rootId) {
-                rootX = node.x
                 rootWidth = node.width
             }
         }
     })
 
-    return { lNode: reactFlownodes, lEdge: edges, rootInfo: { x: rootX, width: rootWidth } };
+    // add info section
+    reactFlownodes.push({
+        id: 'info',
+        type: 'special',
+        position: {
+            x: - screenWidth/2 + rootWidth/2,
+            y: 0
+        },
+        data: {
+            label: 'info section (mock na)'
+        },
+        draggable: false,
+        selectable: false,
+        style: {
+            width: screenWidth,
+            height: defaultSettings.rootY,
+            backgroundColor: 'white',
+            border: '1px solid #777',
+            borderRadius: '5px',
+            textAlign: 'center',
+            fontSize: '12px',
+            color: '#777',
+            padding: '5px'
+        }
+    })
+
+    return { lNode: reactFlownodes, lEdge: edges, rootInfo: { width: rootWidth } };
 }
 
-export default function EntitreeTree() {
+interface EntitreeTreeProps {
+    screenWidth: number;
+}
+
+export default function EntitreeTree({ screenWidth }: EntitreeTreeProps) {
     const { initialNodes, initialEdges } = getInitialNodesAndEdges();
-    let { lNode, lEdge, rootInfo } = calculateLayoutNodes(initialNodes, initialEdges);
+    let { lNode, lEdge, rootInfo } = calculateLayoutNodes(initialNodes, initialEdges, screenWidth);
     const [nodes, setNodes, onNodesChange] = useNodesState(lNode);
     const [edges, setEdges, onEdgesChange] = useEdgesState(lEdge);
     const nodeTypes = useMemo(() => ({ orderedGroupNode: OrderedGroupNode, singleNode: SingleNode, unorderedGroupNode: UnorderedGroupNode }), []);
@@ -107,24 +135,8 @@ export default function EntitreeTree() {
 
     const { setViewport } = useReactFlow();
 
-    const [screenWidth, setScreenWidth] = useState<number | null>(null);
-    useEffect(() => {
-        const updateScreenWidth = () => {
-            setScreenWidth(window.innerWidth);
-        };
-
-        updateScreenWidth();
-
-        window.addEventListener('resize', updateScreenWidth);
-
-        return () => {
-            window.removeEventListener('resize', updateScreenWidth);
-        };
-    }, []);
-
     return (
         <>
-            {screenWidth !== null && 
             <ReactFlow
                 nodes={nodes}
                 edges={edges}
@@ -140,7 +152,7 @@ export default function EntitreeTree() {
                 panOnScroll={true}
 
                 panOnScrollMode={PanOnScrollMode.Free}
-                // fitView
+                fitView
                 // fitViewOptions={{ nodes: nodes }}
                 maxZoom={1}
                 minZoom={1}
@@ -149,10 +161,10 @@ export default function EntitreeTree() {
                     [bounds.x + bounds.width, bounds.y + bounds.height]
                 ]}
                 // onlyRenderVisibleElements={true}
-                // defaultViewport={{ x: (bounds.x + bounds.width)/2, y: 0, zoom: 1 }}
+
                 onInit={() => {
                     setViewport({
-                      x: rootInfo.x + ( screenWidth === null ? 0 : screenWidth / 2) - ( rootInfo.width / 2),
+                      x: defaultSettings.rootX + ( screenWidth === null ? 0 : screenWidth / 2) - ( rootInfo.width / 2),
                       y: 0,
                       zoom: 1
                     });
@@ -160,8 +172,7 @@ export default function EntitreeTree() {
             >
                 <MiniMap pannable={true} />
                 <Background variant={BackgroundVariant.Dots} gap={20} size={1} />
-            </ReactFlow> }
-            {screenWidth === null && <p>Loading...</p>}
+            </ReactFlow>
         </>
     );
 }

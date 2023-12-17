@@ -35,7 +35,7 @@ export const mockData: IMockData = {
         {
             id: '1', name: 'Overview', next: ['2', '3'], type: GroupType.Single, 
             members: [
-                { id: '1', name: 'Overview', progress: 0, type: MicroNodeType.Micro }
+                { id: '1', name: 'Overview', progress: 0, type: MicroNodeType.Micro },
             ]
         },
         {
@@ -77,7 +77,7 @@ export const mockData: IMockData = {
             ]
         },
         {
-            id: '5', name: 'Control Flow', next: [], type: GroupType.Unordered, 
+            id: '5', name: 'Control Flow', next: ['7'], type: GroupType.Unordered, 
             members: [
                 { id: '51', name: 'Conditional', progress: 50, type: MicroNodeType.Micro },
                 { id: '52', name: 'Loop', progress: 0, type: MicroNodeType.Micro },
@@ -90,22 +90,22 @@ export const mockData: IMockData = {
             ]
         },
         {
-            id: '6', name: 'Useful Library', next: [], type: GroupType.Unordered, 
+            id: '6', name: 'Useful Library', next: ['7'], type: GroupType.Unordered, 
             members: [
                 { id: '61', name: 'Built-in function', progress: 0, type: MicroNodeType.Micro },
                 { id: '62', name: 'Standard library', progress: 0, type: MicroNodeType.Micro },
                 { id: '63', name: 'Standard library1', progress: 0, type: MicroNodeType.Micro },
                 { id: '64', name: 'Built-in function - 1', progress: 0, type: MicroNodeType.Micro },
                 { id: '65', name: 'Standard library - 1', progress: 0, type: MicroNodeType.Micro },
-                { id: '66', name: 'Standard library - 1', progress: 0, type: MicroNodeType.Micro },
+                { id: '66', name: 'Standard library1 - 1', progress: 0, type: MicroNodeType.Micro },
             ]
         },
-        // {
-        //     id: '7', name: 'Python Final Test', next: [], type: GroupType.Single, 
-        //     members: [
-        //         { id: '7', name: 'Python Final Test', progress: 0, type: MicroNodeType.Test }
-        //     ]
-        // },
+        {
+            id: '7', name: 'Python Final Test', next: [], type: GroupType.Single, 
+            members: [
+                { id: '7', name: 'Python Final Test', progress: 0, type: MicroNodeType.Test }
+            ]
+        },
         {
             id: '8', name: 'Comment 2', next: [], type: GroupType.Single, 
             members: [
