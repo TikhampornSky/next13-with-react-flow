@@ -1,10 +1,10 @@
 "use client"
 import { useMemo, useEffect, Dispatch, SetStateAction } from "react";
-import ReactFlow, { useNodesState, useEdgesState, ConnectionLineType, Node, Edge, Background, MiniMap, BackgroundVariant, PanOnScrollMode, getNodesBounds, useReactFlow, Rect } from "reactflow";
+import ReactFlow, { useNodesState, useEdgesState, ConnectionLineType, Node, Edge, Background, MiniMap, BackgroundVariant, PanOnScrollMode, getNodesBounds, useReactFlow, Rect, useViewport, getViewportForBounds } from "reactflow";
 import { layoutFromMap } from "entitree-flex";
 import { getInitialNodesAndEdges, groupMember, parents } from './node-edges';
 import { GroupType } from "./data";
-import { defaultSettings, horizontalMargin, verticalMargin } from "./setting";
+import { defaultSettings, horizontalMargin, verticalMargin, zoomLevel } from "./setting";
 import OrderedGroupNode from "./CustomNode/OrderedGroupNode";
 import SingleNode from "./CustomNode/SingleNode";
 import UnorderedGroupNode from "./CustomNode/UnorderedGroupNode";
@@ -17,6 +17,7 @@ interface TreeNode {
     height?: number;
     children?: string[];
     spouses?: string[];
+    siblings?: string[];
     parents?: string[];
 }
 
@@ -78,7 +79,7 @@ function calculateLayoutNodes(reactFlownodes: Node<any, string | undefined>[], e
     nodes.forEach((node) => {
         const reactFlowNode = reactFlownodes.find((value) => value.data.label === node.name)
         if (reactFlowNode) {
-            // reactFlowNode.data.label = reactFlowNode.id  // TEST ONLY
+            reactFlowNode.data.label = reactFlowNode.id  // TEST ONLY
 
             reactFlowNode.position = {
                 x: node.x,
@@ -89,6 +90,11 @@ function calculateLayoutNodes(reactFlownodes: Node<any, string | undefined>[], e
             if (reactFlowNode.id === rootId) {
                 rootWidth = node.width
             }
+
+            // // TEST
+            // if (reactFlowNode.id === "7") {
+            //     console.log("node 7: " + JSON.stringify(reactFlowNode.position))
+            // }
         }
     })
 
@@ -115,10 +121,10 @@ function setInfoSection(reactFlownodes: Node<any, string | undefined>[], screenW
 
 interface EntitreeTreeProps {
     screenWidth: number;
-    setScreenWidth: Dispatch<SetStateAction<number | null>>
+    screenHeight: number;
 }
 
-export default function EntitreeTree({ screenWidth, setScreenWidth }: EntitreeTreeProps) {
+export default function EntitreeTree({ screenWidth, screenHeight }: EntitreeTreeProps) {
     const { initialNodes, initialEdges } = getInitialNodesAndEdges();
     const { setViewport } = useReactFlow();
     const nodeTypes = useMemo(() => ({ orderedGroupNode: OrderedGroupNode, singleNode: SingleNode, 
@@ -127,13 +133,24 @@ export default function EntitreeTree({ screenWidth, setScreenWidth }: EntitreeTr
     let { lNode, lEdge, rootInfo } = calculateLayoutNodes(initialNodes, initialEdges, screenWidth);
     const [nodes, setNodes, onNodesChange] = useNodesState(lNode);
     const [edges, setEdges, onEdgesChange] = useEdgesState(lEdge);
+    
     const bounds = getNodesBounds(nodes);
+    if (bounds.height < screenHeight) {
+        bounds.height = screenHeight
+    }
+    // console.log("bounds: " + JSON.stringify(bounds))
+
+    // const { x, y, zoom } = getViewportForBounds(bounds, screenWidth, screenHeight, zoomLevel, zoomLevel);
+    // console.log("x: " + x + ", y: " + y + ", zoom: " + zoom)
+
+    // const { x, y, zoom } = useViewport();
+    // console.log("x: " + x + ", y: " + y + ", zoom: " + zoom)
     
     useEffect(() => {
         setViewport({
-            x: defaultSettings.rootX + ( screenWidth === null ? 0 : screenWidth / 2) - ( rootInfo.width / 2),
+            x: defaultSettings.rootX + ( screenWidth / 2) - ( rootInfo.width / 2),
             y: 0,
-            zoom: 1
+            zoom: zoomLevel
         });
         setInfoSection(nodes, screenWidth, rootInfo.width)
     }, [screenWidth]);
@@ -157,8 +174,8 @@ export default function EntitreeTree({ screenWidth, setScreenWidth }: EntitreeTr
                 panOnScrollMode={PanOnScrollMode.Free}
                 fitView
                 // fitViewOptions={{ nodes: nodes }}
-                maxZoom={1}
-                minZoom={1}
+                maxZoom={zoomLevel}
+                minZoom={zoomLevel}
                 translateExtent={[
                     [bounds.x, bounds.y],
                     [bounds.x + bounds.width, bounds.y + bounds.height]
@@ -167,9 +184,9 @@ export default function EntitreeTree({ screenWidth, setScreenWidth }: EntitreeTr
 
                 onInit={() => {
                     setViewport({
-                      x: defaultSettings.rootX + ( screenWidth === null ? 0 : screenWidth / 2) - ( rootInfo.width / 2),
+                      x: defaultSettings.rootX + ( screenWidth / 2) - ( rootInfo.width / 2),
                       y: 0,
-                      zoom: 1
+                      zoom: zoomLevel
                     });
                 }}
             >

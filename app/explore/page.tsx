@@ -7,7 +7,7 @@ import { useScreenContext } from "@/components/EntitreeFlex/context/ScreenContex
 import { ReactFlowProvider } from 'reactflow'
 
 export default function Explore() {
-    const { screenWidth, setScreenWidth } = useScreenContext();
+    const { screenWidth, screenHeight } = useScreenContext();
 
     return (
         <Item>
@@ -15,12 +15,12 @@ export default function Explore() {
                 <h1 style={{ textAlign: 'center', backgroundColor: 'pink' }}> 1 </h1>
             </div>
             <div style={{ width: '100vw', height: '95vh' }}>
-                {screenWidth !== null &&
+                {screenWidth !== null && screenHeight != null &&
                     <ReactFlowProvider>
-                        <EntitreeTree screenWidth={screenWidth} setScreenWidth={setScreenWidth}/>
+                        <EntitreeTree screenWidth={screenWidth} screenHeight={screenHeight}/>
                     </ReactFlowProvider>
                 }
-                {screenWidth === null && <p>Loading...</p>}
+                {(screenWidth === null || screenHeight == null) && <p>Loading...</p>}
             </div>
         </Item>
     )

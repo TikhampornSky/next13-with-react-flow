@@ -5,28 +5,33 @@ import { createContext, useContext, ReactNode } from 'react';
 interface ScreenContextProps {
   screenWidth: number | null;
   setScreenWidth: React.Dispatch<React.SetStateAction<number | null>>;
+
+  screenHeight: number | null;
+  setScreenHeight: React.Dispatch<React.SetStateAction<number | null>>;
 }
 
 const ScreenContext = createContext<ScreenContextProps | undefined>(undefined);
 
 export const ScreenContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [screenWidth, setScreenWidth] = useState<number | null>(null);
+  const [screenHeight, setScreenHeight] = useState<number | null>(null);
   useEffect(() => {
-    const updateScreenWidth = () => {
+    const updateScreenWidthHight = () => {
       setScreenWidth(window.innerWidth);
+      setScreenHeight(window.innerHeight);
     };
 
-    updateScreenWidth();
+    updateScreenWidthHight();
 
-    window.addEventListener('resize', updateScreenWidth);
+    window.addEventListener('resize', updateScreenWidthHight);
 
     return () => {
-      window.removeEventListener('resize', updateScreenWidth);
+      window.removeEventListener('resize', updateScreenWidthHight);
     };
   }, []);
 
   return (
-    <ScreenContext.Provider value={{ screenWidth, setScreenWidth }}>
+    <ScreenContext.Provider value={{ screenWidth, setScreenWidth, screenHeight, setScreenHeight }}>
       {children}
     </ScreenContext.Provider>
   );
