@@ -17,3 +17,7 @@ export function findRoot() {
     })
     return root;
 }
+
+export function findChildren() { // Defined: children are nodes that have parents more than one
+
+}

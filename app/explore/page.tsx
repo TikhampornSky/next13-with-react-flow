@@ -2,8 +2,8 @@
 import { Item } from "@/components";
 import D3FlexTree from "@/components/D3Flextree";
 import LayoutFlow from "@/components/DagreTree";
-import EntitreeTree from "@/components/EntitreeFlex";
-import { useScreenContext } from "@/components/EntitreeFlex/context/ScreenContext";
+import EntitreeTree from "@/components/Playground";
+import { useScreenContext } from "@/components/Playground/context/ScreenContext";
 import { ReactFlowProvider } from 'reactflow'
 
 export default function Explore() {
@@ -18,6 +18,7 @@ export default function Explore() {
                 {screenWidth !== null && screenHeight != null &&
                     <ReactFlowProvider>
                         <EntitreeTree screenWidth={screenWidth} screenHeight={screenHeight}/>
+                        {/* <D3FlexTree /> */}
                     </ReactFlowProvider>
                 }
                 {(screenWidth === null || screenHeight == null) && <p>Loading...</p>}

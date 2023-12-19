@@ -112,12 +112,19 @@ export const mockData: IMockData = {
             ]
         },
         {
-            id: '7', name: 'Python Final Test', next: [], type: GroupType.Ordered, 
+            id: '7', name: 'Python Final Test', next: [], type: GroupType.Unordered, 
             members: [
                 { id: '71', name: 'Python Final Test 1', progress: 0, type: MicroNodeType.Test },
                 // { id: '72', name: 'Python Final Test 2', progress: 0, type: MicroNodeType.Test },
             ]
         },
+        // {
+        //     id: '70', name: 'Python Midterm Test', next: [], type: GroupType.Ordered, 
+        //     members: [
+        //         { id: '701', name: 'Python Midterm Test 1', progress: 0, type: MicroNodeType.Test },
+        //         // { id: '72', name: 'Python Final Test 2', progress: 0, type: MicroNodeType.Test },
+        //     ]
+        // },
         {
             id: '8', name: 'Comment 2', next: [], type: GroupType.Single, 
             members: [

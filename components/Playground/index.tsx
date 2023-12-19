@@ -66,6 +66,10 @@ function generateStructForFlextree(hierarchy: NodeData, nodes: Node<any, string 
         }
 
     })
+
+    hierarchy["7"].parents = []
+
+    console.log("hierarchy: " + JSON.stringify(hierarchy))
 }
 
 function calculateLayoutNodes(reactFlownodes: Node<any, string | undefined>[], edges: Edge<any>[], screenWidth: number) {

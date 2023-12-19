@@ -1,4 +1,4 @@
-import { ScreenContextProvider } from '@/components/EntitreeFlex/context/ScreenContext'
+import { ScreenContextProvider } from '@/components/Playground/context/ScreenContext'
 import '../globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
